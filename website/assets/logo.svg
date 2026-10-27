@@ -1,11 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bytescript logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Bytescript logo">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f5a623"/>
-      <stop offset="1" stop-color="#e06428"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#facc15"/><stop offset=".32" stop-color="#fb923c"/>
+      <stop offset=".58" stop-color="#f472b6"/><stop offset=".82" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/>
     </linearGradient>
   </defs>
-  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#g)"/>
-  <text x="32" y="33" font-family="ui-monospace, Consolas, monospace" font-size="11" font-weight="700" fill="#1a1207" text-anchor="middle" opacity="0.55">0101</text>
-  <text x="32" y="52" font-family="ui-monospace, Consolas, monospace" font-size="26" font-weight="800" fill="#fff7ea" text-anchor="middle">B&gt;_</text>
+  <rect x="4" y="4" width="88" height="88" rx="24" fill="url(#bg)"/>
+  <path d="M4 28C25 16 52 12 92 24v-8c0-7-5-12-12-12H16C9 4 4 9 4 16v12z" fill="url(#shine)"/>
+  <circle cx="23" cy="25" r="3" fill="#17101f" opacity=".55"/><circle cx="34" cy="25" r="3" fill="#17101f" opacity=".4"/>
+  <text x="48" y="66" text-anchor="middle" font-family="monospace" font-size="35" font-weight="900" fill="#fff7ed">B&gt;_</text>
+  <text x="48" y="82" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" letter-spacing="3" fill="#17101f" opacity=".62">0101</text>
 </svg>

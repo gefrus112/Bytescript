@@ -7,7 +7,7 @@
 <meta name="description" content="Bytescript is an object-oriented, embeddable programming language with a bytecode VM, written in C. Now on Windows, Linux and macOS.">
 <link rel="icon" href="favicon.ico">
 <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css?v=2">
 </head>
 <body>
 <header class="site">
@@ -26,26 +26,54 @@
   </div>
 </header>
 
-<div class="hero">
-  <img src="assets/logo.svg" alt="Bytescript logo">
-  <h1>Bytescript</h1>
-  <p class="tag">A small, object-oriented, embeddable programming language with its own bytecode VM — written in C, now running on Windows, Linux and macOS.</p>
-  <div class="cta">
-    <a class="btn primary" href="download.html">⬇&nbsp; Download Bytescript</a>
-    <a class="btn" href="docs.html">Read the docs</a>
-    <a class="btn" href="install.html">Installation guide</a>
+<section class="hero">
+  <canvas class="byte-rain" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <img class="hero-logo" src="assets/logo.svg" alt="Bytescript logo">
+      <span class="eyebrow">v1.1 · now on Windows, Linux &amp; macOS</span>
+      <h1>Code that<br><span class="grad-text">runs everywhere.</span></h1>
+      <p class="tag"><strong>Bytescript</strong> is a small, object-oriented, embeddable programming language with its own bytecode VM — written in C, friendly to learn, and fun to hack on.</p>
+      <div class="cta">
+        <a class="btn primary" href="download.html">⬇&nbsp; Download Bytescript</a>
+        <a class="btn" href="#play">▶ See it run</a>
+        <a class="btn" href="docs.html">Read the docs</a>
+      </div>
+      <div class="badges">
+        <span class="badge">version 1.1.0</span>
+        <span class="badge">bytecode VM</span>
+        <span class="badge">written in C</span>
+        <span class="badge">MIT licence</span>
+      </div>
+    </div>
+
+    <div class="terminal" aria-label="Animated Bytescript terminal demonstration">
+      <div class="terminal-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="terminal-title">bytescript — live demo</span></div>
+      <div class="terminal-body" id="typed-terminal">
+        <div><span class="term-prompt">$ </span><span class="term-cmd">bytescript hello.bs</span></div>
+        <div class="term-out">Hello, World!</div>
+        <div class="term-out">Welcome to Bytescript</div>
+        <div class="term-dim">Tip: run <strong>bytescript</strong> with no file for the REPL.</div>
+      </div>
+    </div>
   </div>
-  <div class="badges">
-    <span class="badge">version 1.1.0</span>
-    <span class="badge">Windows · Linux · macOS</span>
-    <span class="badge">written in C</span>
-    <span class="badge">MIT licence</span>
-  </div>
+</section>
+
+<div class="stats" aria-label="Bytescript at a glance">
+  <div class="stat"><b data-count="3">0</b><span>operating systems</span></div>
+  <div class="stat"><b data-count="7">0</b><span>stdlib modules</span></div>
+  <div class="stat"><b data-count="24">0</b><span>automated tests</span></div>
+  <div class="stat"><b data-count="64" data-suffix="-bit">0</b><span>NaN-boxed values</span></div>
 </div>
+
+<div class="ticker" aria-hidden="true"><div class="ticker-track">
+  <span>Number <i>·</i> String <i>·</i> Table <i>·</i> Function <i>·</i> class <i>·</i> func <i>·</i> import <i>·</i> Math <i>·</i> OS <i>·</i> Time <i>·</i> Random <i>·</i> Json <i>·</i> Base64 <i>·</i> Debug <i>·</i> bytecode VM <i>·</i> REPL <i>·</i>&nbsp;</span>
+  <span>Number <i>·</i> String <i>·</i> Table <i>·</i> Function <i>·</i> class <i>·</i> func <i>·</i> import <i>·</i> Math <i>·</i> OS <i>·</i> Time <i>·</i> Random <i>·</i> Json <i>·</i> Base64 <i>·</i> Debug <i>·</i> bytecode VM <i>·</i> REPL <i>·</i>&nbsp;</span>
+</div></div>
 
 <main class="wrap">
 
-  <h2>See it in action</h2>
+  <div class="section-head"><span class="kicker">Playground</span><h2 id="play">See it in action</h2><p class="muted">Real programs from the <code>exemples/</code> folder, with their real output. Switch tabs, copy the code, run it yourself.</p></div>
   <div data-tabs="demos">
     <div class="tabs">
       <button class="tab-btn active" type="button" data-tab="demo-hello">hello.bs</button>
@@ -185,6 +213,40 @@ bytescript                      -- interactive REPL</code></pre>
     <p><a href="https://github.com/gefrus112/Bytescript/blob/main/CHANGELOG.md">Full changelog →</a></p>
   </div>
 
+  <div class="section-head"><span class="kicker">Under the hood</span><h2>From source to speed</h2><p class="muted">Every <code>.bs</code> file travels the same pipeline — no interpreter walking the tree at run time.</p></div>
+  <div class="pipeline" aria-label="Bytescript compilation pipeline">
+    <div class="pipe-step"><b>Lexer</b><span>tokens</span></div><div class="pipe-arrow">➜</div>
+    <div class="pipe-step"><b>Parser</b><span>AST</span></div><div class="pipe-arrow">➜</div>
+    <div class="pipe-step"><b>Types</b><span>checked early</span></div><div class="pipe-arrow">➜</div>
+    <div class="pipe-step"><b>Compiler</b><span>bytecode</span></div><div class="pipe-arrow">➜</div>
+    <div class="pipe-step"><b>VM</b><span>registers</span></div>
+  </div>
+
+  <div class="section-head"><span class="kicker">Pick your platform</span><h2>One language, every machine</h2></div>
+  <div class="grid">
+    <div class="card dl-card"><div class="os">🪟</div><h3>Windows</h3><p>Native <code>bytescript.exe</code>, DLL standard library and the original home of the project.</p><p><a class="btn small primary" href="install.html">Install on Windows</a></p></div>
+    <div class="card dl-card"><div class="os">🐧</div><h3>Linux</h3><p><code>libbytescript.so</code>, rpath-ready binaries and a two-minute <code>make</code> build.</p><p><a class="btn small primary" href="install.html">Install on Linux</a></p></div>
+    <div class="card dl-card"><div class="os">🍎</div><h3>macOS</h3><p>Apple Silicon and Intel friendly, with <code>.dylib</code> modules and CI on every change.</p><p><a class="btn small primary" href="install.html">Install on macOS</a></p></div>
+  </div>
+
+  <div class="section-head"><span class="kicker">FAQ</span><h2>Quick answers</h2></div>
+  <div class="faq">
+    <details><summary>Is Bytescript free?</summary><p>Yes — MIT licensed. Use it, embed it, fork it, ship it.</p></details>
+    <details><summary>Do I need to install anything else?</summary><p>To run programs, nothing. To build from source you only need GCC and <code>make</code>; the <a href="install.html">install guide</a> walks through each OS.</p></details>
+    <details><summary>Can I use Bytescript inside my own C program?</summary><p>That's a core use case: link the library, include <code>bytescript.h</code> and call <code>exec()</code>. See <a href="docs.html#embedding">Embedding in C</a>.</p></details>
+    <details><summary>Where do I learn the language?</summary><p>Start with <a href="docs.html#getting-started">Getting started</a>, run the files in <code>exemples/</code>, and experiment in the REPL (type <code>bytescript</code> with no arguments).</p></details>
+  </div>
+
+  <div class="cta-panel">
+    <span class="kicker">Ready when you are</span>
+    <h2>Write your first .bs today</h2>
+    <p class="muted">Download it, run <code>bytescript exemples/hello.bs</code>, and make something fun.</p>
+    <div class="cta" style="justify-content:center">
+      <a class="btn primary" href="download.html">⬇ Download Bytescript</a>
+      <a class="btn" href="contributors.html">🤝 Meet the contributors</a>
+    </div>
+  </div>
+
 </main>
 
 <footer class="site">
@@ -210,6 +272,6 @@ bytescript                      -- interactive REPL</code></pre>
     </ul></div>
   </div>
 </footer>
-<script src="assets/js/main.js"></script>
+<script src="assets/js/main.js?v=2"></script>
 </body>
 </html>
