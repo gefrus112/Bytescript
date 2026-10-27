@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentation — Bytescript</title>
+<meta name="description" content="Bytescript documentation: syntax, types, control flow, classes, tables, modules, built-ins and the standard library.">
+<link rel="icon" href="favicon.ico">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="site">
+  <div class="nav">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="Bytescript logo">Bytescript <span class="ver">v1.1.0</span></a>
+    <button class="icon-btn nav-toggle" type="button" aria-label="Menu">☰</button>
+    <nav class="main">
+      <a href="index.html">Home</a>
+      <a href="docs.html">Docs</a>
+      <a href="install.html">Install</a>
+      <a href="download.html">Download</a>
+      <a href="contributors.html">Contributors</a>
+      <a href="https://github.com/gefrus112/Bytescript">GitHub ↗</a>
+    </nav>
+    <button class="icon-btn theme-toggle" type="button" title="Toggle light/dark theme">🌗</button>
+  </div>
+</header>
+
+<main class="wrap">
+<h1>Documentation</h1>
+<p class="muted">Everything you need to write Bytescript programs. New here? Start with <a href="#getting-started">Getting started</a>, then read top to bottom — or search.</p>
+
+<div class="docs-layout">
+<aside class="toc">
+  <input id="docs-search" type="search" placeholder="🔍 Search the docs…" aria-label="Search the docs">
+  <h4>Guide</h4>
+  <a href="#getting-started">Getting started</a>
+  <a href="#variables">Variables &amp; types</a>
+  <a href="#operators">Operators</a>
+  <a href="#control-flow">Control flow</a>
+  <a href="#functions">Functions</a>
+  <a href="#tables">Tables</a>
+  <a href="#classes">Classes &amp; objects</a>
+  <a href="#modules">Modules &amp; imports</a>
+  <h4>Reference</h4>
+  <a href="#builtins">Built-ins</a>
+  <a href="#stdlib">Standard library</a>
+  <a href="#cli">Command line</a>
+  <a href="#embedding">Embedding in C</a>
+  <a href="#bvm">Inside the BVM</a>
+  <a href="#limitations">Known limitations</a>
+</aside>
+
+<div>
+<p id="docs-noresults" style="display:none" class="warn">No sections match your search. Try another word, or clear the search box.</p>
+
+<section class="doc" id="getting-started">
+<h2>Getting started</h2>
+<p>Bytescript programs are plain text files ending in <code>.bs</code>. A file is a list of <em>statements</em> separated by newlines or semicolons. Comments start with <code>--</code> and run to the end of the line.</p>
+<pre><code class="lang-bytescript">-- hello.bs
+print("Hello, World!")</code></pre>
+<p>Run it with the interpreter (see the <a href="install.html">install guide</a>):</p>
+<pre><code>bytescript hello.bs</code></pre>
+<p>You can also experiment without files:</p>
+<pre><code>bytescript -e "print(2 + 3)"   -- run a snippet
+bytescript                      -- interactive REPL: type code, see results</code></pre>
+<div class="note"><strong>Editor tip:</strong> the repository ships a VS Code extension with syntax highlighting for <code>.bs</code> files — see <code>editors/vscode/</code> or the <a href="install.html#editor">install guide</a>.</div>
+</section>
+
+<section class="doc" id="variables">
+<h2>Variables &amp; types</h2>
+<p>Declare a variable with a type and a name. Identifiers start with a letter or <code>_</code> and may contain letters, digits and <code>_</code>.</p>
+<pre><code class="lang-bytescript">Number answer = 42
+String name = "Bytescript"
+Table scores = { 10, 20, 30 }
+
+answer = answer + 1        -- assignment uses the same name, no type</code></pre>
+<p>Built-in types (a type is really a class — yours or a built-in one):</p>
+<table>
+<tr><th>Type</th><th>Short form</th><th>What it holds</th></tr>
+<tr><td><code>Number</code></td><td><code>num</code></td><td>Double-precision number, up to 15 significant digits. There is no separate boolean type: <code>0</code> is falsy, everything else truthy; comparisons return <code>1</code>/<code>0</code>. The globals <code>true</code>, <code>false</code> and <code>NIL</code> are numbers.</td></tr>
+<tr><td><code>String</code></td><td><code>str</code></td><td>Text, written with double quotes: <code>"hi"</code>. Strings are interned constants.</td></tr>
+<tr><td><code>Table</code></td><td><code>table</code></td><td>Array + hash map in one value (see <a href="#tables">Tables</a>).</td></tr>
+<tr><td><code>Function</code></td><td>—</td><td>Functions are first-class values you can store and pass around.</td></tr>
+<tr><td><code>CData</code></td><td>—</td><td>Opaque data owned by C code (see <a href="#embedding">Embedding</a>).</td></tr>
+<tr><td><code>File</code></td><td>—</td><td>An open file, from the <code>IO</code> built-in.</td></tr>
+<tr><td><code>var</code></td><td>—</td><td>"Any type". Values declared as <code>var</code> skip most type checks.</td></tr>
+</table>
+<p>Prefixing a class name with <code>__</code> (e.g. <code>__Counter</code>) means "the class itself" rather than an object of it. Declaring a variable without a value (<code>Number x</code>) leaves it holding a garbage value — assign before use.</p>
+</section>
+
+<section class="doc" id="operators">
+<h2>Operators</h2>
+<table>
+<tr><th>Kind</th><th>Operators</th><th>Notes</th></tr>
+<tr><td>Arithmetic</td><td><code>+ - * / // % **</code></td><td><code>//</code> is floor division, <code>%</code> modulo, <code>**</code> power.</td></tr>
+<tr><td>String</td><td><code>..</code></td><td>Concatenation: <code>"a" .. "b"</code> → <code>"ab"</code> (calls <code>String:concat</code>).</td></tr>
+<tr><td>Comparison</td><td><code>== != &lt; &gt; &lt;= &gt;=</code></td><td>Return <code>1</code> or <code>0</code>.</td></tr>
+<tr><td>Logic</td><td><code>and or not</code>, also <code>&amp;&amp; || !</code></td><td><code>and</code>/<code>or</code> also exist as value-returning forms via the VM; <code>not x</code> / <code>!x</code> negate truthiness.</td></tr>
+<tr><td>Bitwise</td><td><code>&amp; | ^</code></td><td>AND, OR, XOR on the raw 64-bit value.</td></tr>
+<tr><td>Unary</td><td><code>-x  +x  not x  !x</code></td><td></td></tr>
+<tr><td>Postfix</td><td><code>f(args)</code> call · <code>t[i]</code> indexing · <code>obj:method(args)</code> method call · <code>x.field</code> field access</td><td>Method calls with <code>:</code> help the compiler check the signature.</td></tr>
+</table>
+<p>Priority, tightest first: postfix → power → arithmetic → comparison → boolean.</p>
+<pre><code class="lang-bytescript">print(2 + 3 * 4)     -- 14
+print(10 // 4)       -- 2 (floor division)
+print(2 ** 10)       -- 1024
+print(-5 + 3)        -- -2
+print(not 0)         -- 1</code></pre>
+</section>
+
+<section class="doc" id="control-flow">
+<h2>Control flow</h2>
+<h3>If</h3>
+<pre><code class="lang-bytescript">Number x = 7
+if x &gt; 10 then
+    print("big")
+end
+if x &lt;= 10 then
+    print("small")
+end</code></pre>
+<div class="warn"><strong>Heads-up:</strong> <code>else</code>/<code>elseif</code> exist in the grammar but are currently unreliable (see <a href="#limitations">Known limitations</a>). Prefer separate <code>if</code> statements with explicit conditions, as above.</div>
+
+<h3>Loops</h3>
+<pre><code class="lang-bytescript">-- numeric for: start, end (exclusive!), optional step (default 1)
+for i = 0, 3 repeat print(i) end        -- 0 1 2
+for i = 10, 0, -5 repeat print(i) end   -- 10 5
+
+-- generic for: iterate a table (index, value)
+Table t = { 10, 20, 30 }
+for i, v in t repeat
+    print(v)
+end
+
+-- while
+Number n = 0
+while n &lt; 3 repeat
+    n = n + 1
+end
+
+-- repeat ... while: body always runs at least once (do-while)
+Number m = 0
+repeat
+    m = m + 1
+    if m == 2 then continue end
+    if m == 4 then break end
+    print(m)
+while m &lt; 10 end                       -- prints 1 then 3</code></pre>
+<p><code>break</code> leaves the loop, <code>continue</code> skips to the next iteration.</p>
+</section>
+
+<section class="doc" id="functions">
+<h2>Functions</h2>
+<pre><code class="lang-bytescript">func Number fib(Number n)      -- return type, then typed arguments
+    if n &lt;= 1 then return n end
+
+    Number a = 0
+    Number b = 1
+    for i = 1, n repeat
+        Number tmp = a + b
+        a = b
+        b = tmp
+    end
+    return b
+end
+
+print(fib(10))   -- 55</code></pre>
+<ul>
+<li>The return type and argument types are optional; untyped means <code>var</code>.</li>
+<li>Functions are values: pass them to other functions.</li>
+</ul>
+<pre><code class="lang-bytescript">func Number apply(Function f, Number x)
+    return f(x)
+end
+print(apply(fib, 7))   -- 13</code></pre>
+<div class="warn"><strong>Known limitation:</strong> inside a function you cannot call another user-defined function <em>by name</em> (including recursion) — only built-ins/globals, parameters, methods and module functions are visible. Passing functions as arguments, as above, is the way to do higher-order code today.</div>
+</section>
+
+<section class="doc" id="tables">
+<h2>Tables</h2>
+<p>A table literal <code>{ a, b, c }</code> fills the table's array part (indexes start at 0). Tables also have a hash part for key→value storage.</p>
+<pre><code class="lang-bytescript">Table t = { 10, 20, 30 }
+print(t:len())          -- 3
+print(t[0] + t[2])      -- 40
+t:insert(40)            -- append (or use: alloc t -> 40 end)
+print(t[3])             -- 40
+
+t:appendHash("name", "bytescript")
+print(t:get("name"))    -- bytescript</code></pre>
+<p>The <code>alloc</code> statement is sugar for <code>:insert()</code>: <code>alloc t -&gt; 1, 2, 3 end</code>. Full method list in <a href="#builtins">Built-ins → Table</a>.</p>
+</section>
+
+<section class="doc" id="classes">
+<h2>Classes &amp; objects</h2>
+<pre><code class="lang-bytescript">class Counter
+    -- constructor: a static __new returning the class type.
+    -- The compiler creates `self` (the new object) for you.
+    func static Counter __new()
+        Number self.value = 0     -- declare an object field
+        return self
+    end
+
+    func increment()              -- normal method: `self` is implicit
+        self.value = self.value + 1
+    end
+
+    func Number get()
+        return self.value
+    end
+end
+
+Counter c = Counter:new()   -- :new() calls __new
+c:increment()
+print(c:get())              -- 1
+print(c.value)              -- field access with .</code></pre>
+<ul>
+<li>Defining <code>class Foo … end</code> registers the class object as the global <code>Foo</code>, the object type <code>Foo</code> and the class type <code>__Foo</code>.</li>
+<li><code>static</code> methods are called on the class without an object; other methods receive <code>self</code> automatically (call them with <code>:</code>).</li>
+<li>Fields declared in the class body belong to the class; <code>Type self.field = …</code> inside a method declares an object field (do it in the constructor).</li>
+<li>Operators on your classes: define dunder methods (<code>__add</code>, <code>__concat</code>, <code>__eq</code>, …) and the compiler routes the operator to them.</li>
+</ul>
+</section>
+
+<section class="doc" id="modules">
+<h2>Modules &amp; imports</h2>
+<pre><code class="lang-bytescript">-- import a whole module (file path relative to your program,
+-- or a name from the standard library folder)
+import "math.dll" as Math end
+print(Math:sqrt(16))          -- 4
+
+-- import single names from another Bytescript file
+from "exemples/fib.bs" import fib end
+
+-- require: run a file and capture the value it `return`s
+require "exemples/speedTests/benchmark.bs" as Function benchmark end</code></pre>
+<ul>
+<li><code>import "path" as Name end</code> — the module's top-level names become fields of <code>Name</code>.</li>
+<li><code>from "path" import a, b as c end</code> — import selected fields (optionally renamed, types may be given).</li>
+<li><code>require "path" as Type name end</code> — like import, but binds the module's returned value.</li>
+<li>Paths ending in <code>.dll</code>/<code>.so</code>/<code>.dylib</code> load a native C module. Since 1.1 the extension is translated to your platform's, so <code>import "Time.dll"</code> works on Linux/macOS too.</li>
+<li>Lookup order: current directory first, then the <code>stdlib/</code> folder next to the interpreter.</li>
+</ul>
+</section>
+
+<section class="doc" id="builtins">
+<h2>Built-ins</h2>
+<p>Always available, no import needed.</p>
+
+<h3>Globals</h3>
+<table>
+<tr><th>Call</th><th>Does</th></tr>
+<tr><td><code>print(value, …)</code></td><td>Prints values to stdout (tab-separated, newline at the end).</td></tr>
+<tr><td><code>input(text)</code></td><td>Prints <code>text</code> and reads a line from stdin.</td></tr>
+<tr><td><code>exec(src)</code></td><td>Compiles and runs Bytescript source code from a string.</td></tr>
+<tr><td><code>free(value)</code></td><td>Frees a heap-allocated value (strings are interned — freeing them is unsafe).</td></tr>
+<tr><td><code>disassemble(func, output?)</code></td><td>Writes a function's bytecode listing (to stdout by default).</td></tr>
+</table>
+
+<h3>Table (methods)</h3>
+<table>
+<tr><th>Method</th><th>Does</th></tr>
+<tr><td><code>Table:new()</code></td><td>Static: a new empty table.</td></tr>
+<tr><td><code>:len()</code></td><td>Number of elements in the array part.</td></tr>
+<tr><td><code>:insert(value, idx?)</code></td><td>Insert into the array part (default: at the end).</td></tr>
+<tr><td><code>:pop(index?)</code></td><td>Remove an element (default: the last).</td></tr>
+<tr><td><code>:slice(start, end)</code></td><td>A sub-table.</td></tr>
+<tr><td><code>:fill(value)</code> · <code>:copy()</code> · <code>:clean()</code> · <code>:reset()</code></td><td>Fill with a value / shallow copy / remove all elements / fresh storage.</td></tr>
+<tr><td><code>:reserve(n)</code> · <code>:expand()</code> · <code>:shrink()</code></td><td>Capacity management for the array part.</td></tr>
+<tr><td><code>:print()</code></td><td>Pretty-print the table.</td></tr>
+<tr><td><code>:appendHash(k, v)</code> · <code>:get(k)</code></td><td>Hash-part write/read (<code>get</code> returns <code>NIL</code> if missing).</td></tr>
+<tr><td><code>:hashedKeys()</code> · <code>:hashedValues()</code> · <code>:buckets()</code></td><td>Keys / values / (key,value) pairs of the hash part, as tables.</td></tr>
+<tr><td><code>:inArray(value)</code></td><td>Is the value in the array part?</td></tr>
+<tr><td><code>Table:hashValue(v)</code></td><td>Static: hash of a value.</td></tr>
+<tr><td><code>:free()</code></td><td>Free the table.</td></tr>
+</table>
+
+<h3>String</h3>
+<table>
+<tr><th>Method</th><th>Does</th></tr>
+<tr><td><code>:len()</code></td><td>Length. Indexing works too: <code>s[0]</code> is the first character.</td></tr>
+<tr><td><code>:format(value, …)</code></td><td><code>printf</code>-style formatting: <code>"%.0f tests":format(1000)</code>.</td></tr>
+<tr><td><code>:compare(other)</code></td><td>Lexicographic comparison (like C <code>strcmp</code>).</td></tr>
+<tr><td><code>String:toString(value)</code></td><td>Static: convert any value to a string.</td></tr>
+<tr><td><code>a .. b</code></td><td>Concatenate (the <code>__concat</code> method).</td></tr>
+</table>
+
+<h3>IO, File, Error</h3>
+<pre><code class="lang-bytescript">File f = IO:open("data.txt", "r")
+String content = f:read()
+f:close()</code></pre>
+<table>
+<tr><th>Call</th><th>Does</th></tr>
+<tr><td><code>IO:open(filename, mode)</code></td><td>Open a file (<code>"r"</code>, <code>"w"</code>, …) → <code>File</code>.</td></tr>
+<tr><td><code>IO.stdout</code></td><td>A <code>File</code> wrapping standard output.</td></tr>
+<tr><td><code>file:read()</code> · <code>:write(text)</code> · <code>:close()</code></td><td>Read all / write / close (closing twice is harmless).</td></tr>
+<tr><td><code>Error:new(name, details)</code></td><td>Raise an error: prints it and stops the program.</td></tr>
+<tr><td><code>TypeError:new(details)</code>, <code>IndexError:new(details)</code>, …</td><td>Named error classes (<code>SyntaxError</code>, <code>InvalidArgsError</code>, <code>StackOverflowError</code>, <code>UnknownIdentifierError</code>…).</td></tr>
+</table>
+</section>
+
+<section class="doc" id="stdlib">
+<h2>Standard library</h2>
+<p>These ship in the <code>stdlib/</code> folder next to the interpreter and are imported by file name:</p>
+<pre><code class="lang-bytescript">import "math.dll" as Math end
+import "Time.dll" as Time end
+import "Random.dll" as Random end</code></pre>
+
+<h3>Math</h3>
+<p>Constants <code>Math.pi</code>, <code>Math.e</code>, <code>Math.inf</code>. Functions: <code>max</code>, <code>min</code>, <code>clamp(a,b,c)</code>, <code>abs</code>, <code>floor</code>, <code>ceil</code>, <code>round</code>, <code>trunc</code>, <code>sqrt</code>, <code>sin</code>, <code>cos</code>, <code>tan</code>, <code>asin</code>, <code>acos</code>, <code>atan</code>, <code>atanTwo(y,x)</code>, <code>exp</code>, <code>log</code>, <code>log10</code>, <code>sign</code>, <code>is_inf</code>, <code>deg</code>, <code>rad</code> — all <code>Number → Number</code>.</p>
+<pre><code class="lang-bytescript">print(Math:sqrt(16))     -- 4
+print(Math:max(4, 9))    -- 9
+print(Math:floor(17/10)) -- 1</code></pre>
+
+<h3>OS</h3>
+<p><code>env(name)</code>, <code>cwd()</code>, <code>chdir(path)</code>, <code>absolute(path)</code>, <code>normalize(path)</code>, <code>filename(path)</code>, <code>stem(path)</code>, <code>ext(path)</code>, <code>parent(path)</code>, <code>join(a,b)</code>, <code>run(command)</code> → exit code, <code>exit(code)</code>.</p>
+
+<h3>Time</h3>
+<p><code>time()</code> seconds since the epoch · <code>clock()</code> high-precision monotonic seconds (great for benchmarks) · <code>sleep(milliseconds)</code>.</p>
+
+<h3>Random</h3>
+<p><code>seed()</code> · <code>random()</code> in [0,1] · <code>range(min,max)</code> · <code>integer(min,max)</code>.</p>
+
+<h3>Json</h3>
+<p><code>parse(text)</code> → Table · <code>stringify(value)</code> → String · <code>valid(text)</code> → Number · <code>load(path)</code> · <code>write(path, table)</code>. Import name is <code>"Json.dll"</code>/<code>"json.dll"</code> depending on platform build — the file is <code>json.*</code>.</p>
+
+<h3>Base64 &amp; Debug</h3>
+<pre><code class="lang-bytescript">import "Base64.dll" as Base64 end
+print(Base64:encode("hi"))   -- aGk=
+print(Base64:decode("aGk=")) -- hi</code></pre>
+<p><code>Debug:assert(condition, message?)</code> raises <code>AssertionError</code> when the condition is falsy.</p>
+<p class="muted">Full signatures for every entry: <a href="https://github.com/gefrus112/Bytescript/blob/main/docs/stdlib.md">docs/stdlib.md</a>.</p>
+</section>
+
+<section class="doc" id="cli">
+<h2>Command line</h2>
+<pre><code>bytescript                 Start the interactive REPL
+bytescript &lt;file.bs&gt;       Run a Bytescript program
+bytescript -e "&lt;code&gt;"     Run a snippet of code
+
+Options:
+  -h, --help               Show help and exit
+  -v, --version            Show the version and exit
+  -e, --eval "&lt;code&gt;"      Evaluate the given Bytescript code
+      --                   Treat the next argument as the file name</code></pre>
+<p>In the REPL, blocks (<code>func</code>, <code>if</code>, <code>for</code>…) may span several lines — finish them with <code>end</code>. Errors don't kill the REPL. Commands: <code>.help</code>, <code>.exit</code>.</p>
+<pre><code>bs&gt; print(40 + 2)
+42
+bs&gt; print(undefined_var)
+
+UnknownIdentifierError :
+	Unknown identifier : 'undefined_var'
+
+bs&gt; print("still alive")
+still alive</code></pre>
+<p>Exit codes: <code>0</code> success · <code>1</code> a Bytescript error was raised · <code>2</code> bad command-line usage.</p>
+</section>
+
+<section class="doc" id="embedding">
+<h2>Embedding in C</h2>
+<p>Your <code>dist/</code> folder contains the public header and library (<code>bytescript.h</code>, <code>bytev.h</code>, <code>bytescript.lib</code> on Windows / <code>libbytescript.so|.dylib</code> elsewhere). Include the header and link the library; most API functions are <code>CFunc</code>s:</p>
+<pre><code>typedef TValue (*CFunc)(TValue* argv, size_t argc);</code></pre>
+<pre><code>#include "bytescript.h"
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    intialize_dependencies();
+    initialize_type_specifiers();
+    initialize_oop();
+    initialize_globals();
+
+    TValue code = make_fstring("print(6 * 7)");
+    exec(&amp;code, 1);
+    return 0;
+}</code></pre>
+<p>To write a native module (like the stdlib ones), export two symbols — use <code>BS_EXPORT</code> from <code>platform.h</code> so it works on every OS:</p>
+<pre><code>#include "bytescript.h"
+#include "platform.h"
+
+BS_EXPORT char* bytescript_module_map = "mymodule_map.bs";
+BS_EXPORT TValue bytescript_module_loader(TValue* argv, size_t argc) {
+    argv[0] = new_cfunc(my_function);   /* same order as the .bs map */
+    return NIL;
+}</code></pre>
+<p>Compile it as a shared library, drop it in <code>stdlib/</code> (or next to your script) with its <code>*_map.bs</code>, and <code>import</code> it. Hosts that must not die on script errors can install a jump buffer with <code>bs_set_error_jmp()</code> — errors then <code>longjmp</code> instead of exiting.</p>
+<p class="muted">Details: <a href="https://github.com/gefrus112/Bytescript/blob/main/docs/embedding.md">docs/embedding.md</a>.</p>
+</section>
+
+<section class="doc" id="bvm">
+<h2>Inside the BVM</h2>
+<p>Every Bytescript value is a <strong>TValue</strong>: one 64-bit word using NaN-boxing. If the bits form a normal double it's a <code>Number</code>; quiet-NaN patterns tag the heap types instead:</p>
+<pre><code>typedef union {
+    uint64_t nan;
+    double   num;
+} TValue;</code></pre>
+<ul>
+<li><strong>String</strong> — pointer to <code>{ len, char str[] }</code>; strings are interned, don't free them.</li>
+<li><strong>Func</strong> — either a C function pointer or compiled bytecode + constant pool.</li>
+<li><strong>Table</strong> — a dynamic array plus a hash table.</li>
+<li><strong>Class / Object</strong> — field arrays (up to 256 fields).</li>
+<li><strong>CData</strong> — opaque pointer for C modules; the VM never inspects it.</li>
+</ul>
+<p>Compilation pipeline: lexer → parser (AST) → type resolving → constant folding → class mapping (operators become method calls where needed) → bytecode for a register VM with computed-goto dispatch. Inspect any function with <code>disassemble(f)</code>.</p>
+<p class="muted">Details: <a href="https://github.com/gefrus112/Bytescript/blob/main/docs/bvm.md">docs/bvm.md</a>.</p>
+</section>
+
+<section class="doc" id="limitations">
+<h2>Known limitations</h2>
+<ul>
+<li><strong>No function-to-function calls by name</strong> (yet): a function body can only see built-ins/globals, its parameters, methods and module members. Recursion by name doesn't work either — pass functions as arguments instead.</li>
+<li><strong><code>else</code>/<code>elseif</code> are unreliable</strong> — they can print garbage or nothing. Use separate <code>if</code>s with explicit conditions.</li>
+<li><strong>Numeric <code>for</code> end is exclusive</strong>: <code>for i = 0, 3 repeat</code> gives 0, 1, 2.</li>
+<li>Table literals only fill the array part; a literal syntax for the hash part is planned.</li>
+<li>Variables declared without a value contain garbage until assigned.</li>
+<li>There is no garbage collector: heap values (tables, objects) are freed manually with <code>free()</code> / <code>:free()</code> when it matters. (Operating systems reclaim everything at exit, so short scripts can ignore this.)</li>
+</ul>
+<p>Found something else? <a href="https://github.com/gefrus112/Bytescript/issues">Open an issue</a> — and if you fix it, add a test in <code>tests/</code> and <a href="contributors.html">join the contributor list</a>.</p>
+</section>
+
+</div>
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div><h4>Bytescript</h4><p>A small object-oriented language in C.<br>Free and open source (MIT).</p></div>
+    <div><h4>Project</h4><ul>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="install.html">Install guide</a></li>
+      <li><a href="download.html">Download</a></li>
+      <li><a href="contributors.html">Contributors</a></li>
+    </ul></div>
+    <div><h4>GitHub</h4><ul>
+      <li><a href="https://github.com/gefrus112/Bytescript">Repository</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/releases">Releases</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/issues">Issues</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/CHANGELOG.md">Changelog</a></li>
+    </ul></div>
+    <div><h4>Deep docs</h4><ul>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/syntax.md">Syntax (Markdown)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/stdlib.md">Standard library (Markdown)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/embedding.md">Embedding in C</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/bvm.md">The BVM</a></li>
+    </ul></div>
+  </div>
+</footer>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

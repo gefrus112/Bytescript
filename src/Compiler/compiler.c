@@ -266,8 +266,9 @@ int compile_bin_op(Node* node, Scope* context) {
                 case TT_BOR:    emit(CC ? OP_BOR_RC  : OP_BOR_RR, context); break;
                 case TT_BXOR:   emit(CC ? OP_BXOR_RC : OP_BXOR_RR, context); break;
                 case TT_EEQ:    emit(CC ? OP_EEQ_RC  : OP_EEQ_RR, context); break;
+                case TT_NEQ:    emit(CC ? OP_NEQ_RC  : OP_NEQ_RR, context); break;
                 case TT_GT:     emit(leftCC ? OP_LT_RC : rightCC ? OP_GT_RC : OP_GT_RR, context); break;
-                case TT_LT:     emit(leftCC ? OP_GT_RC : rightCC ? OP_LT_RC : OP_GT_RR, context); break;
+                case TT_LT:     emit(leftCC ? OP_GT_RC : rightCC ? OP_LT_RC : OP_LT_RR, context); break;
                 case TT_GTEQ:   emit(leftCC ? OP_LTEQ_RC : rightCC ? OP_GTEQ_RC : OP_GTEQ_RR, context); break;
                 case TT_LTEQ:   emit(leftCC ? OP_GTEQ_RC : rightCC ? OP_LTEQ_RC : OP_LTEQ_RR, context); break;
             }
@@ -299,16 +300,20 @@ int compile_uni_op(Node* node, Scope* context) {
             emit(r, context);
             emit(target, context);
             emit(cache_constant(NUM_AS_TVALUE(-1), context), context);
+            break; /* was falling through into TT_NOT, overwriting the result */
         }
 
         case TT_NOT: {
             if (node->cc) return cache_constant(NUM_AS_TVALUE(!TRUTHY(get_constant(target, context))), context);
 
-            int r = free_register(register_first(context), context);
+            /* (was `int r`, shadowing the outer r that is returned below,
+             * so `not x` returned register 0 instead of the result) */
+            r = free_register(register_first(context), context);
             emit(OP_NOT, context);
             emit(r, context);
             emit(target, context);
             emit(0x000, context);
+            break;
         }
     }
 
@@ -407,8 +412,10 @@ int compile_if_statement(Node* node, Scope* context) {
     NodeArray stments = node->node.IfNode.statements;
     size_t next = 0;
 
-    struct { size_t len; size_t ptr[cases.len]; } ends;
-    ends.len = 0;
+    /* (Cannot be a struct containing `size_t ptr[cases.len]`: a VLA inside
+     * a struct is a GNU extension that Clang rejects outright.) */
+    size_t ends_ptr[cases.len ? cases.len : 1];
+    size_t ends_len = 0;
 
     for (int i = 0; i < cases.len; i++) {
         int condition = compile(cases.nodes[i], context);
@@ -433,7 +440,7 @@ int compile_if_statement(Node* node, Scope* context) {
         emit(0x00, context);
         emit(0x00, context);
         emit(0x00, context);
-        ends.ptr[ends.len++] = CURRENT_INSTR;
+        ends_ptr[ends_len++] = CURRENT_INSTR;
 
         patch_single_jfalse_label(context->bytecode.bytes, next, get_jump_lenght(next, context));
     }
@@ -445,7 +452,7 @@ int compile_if_statement(Node* node, Scope* context) {
             
         } else { context->bytecode.len -= 4; patch_single_jfalse_label(context->bytecode.bytes, next, get_jump_lenght(next, context)); }
 
-        patch_array_jump_label(context->bytecode.bytes, (struct ArrayLabel){ .len = ends.len, .ptr = ends.ptr }, CURRENT_INSTR);
+        patch_array_jump_label(context->bytecode.bytes, (struct ArrayLabel){ .len = ends_len, .ptr = ends_ptr }, CURRENT_INSTR);
     }
 
     return 0;
@@ -735,7 +742,10 @@ int compile_selfcall(Node* node, Scope* context) {
         field_acess.node.FieldAccessNode.target = &var_access;
 
         func = register_specific_top(compile(&field_acess, context), context);
-        register_specific_top(compile(target_node, context), context);
+
+        int target = compile(target_node, context);
+        if (target_node->cc) target = register_constant(target, context, -1);
+        register_specific_top(target, context);
 
     } else func = register_specific_top(get_target_field(target_node, node->node.SelfCallnode.name, !call_method, context), context);
 
@@ -1284,9 +1294,9 @@ int compile_load_cmodule(Node* node, Scope* context, BytecodeInstruction instr, 
 
     // loading the module
 
-    HMODULE dll = node->node.cimportNode.dll;
+    BSModule dll = node->node.cimportNode.dll;
 
-    void* loader_ptr = GetProcAddress(dll, "bytescript_module_loader");
+    void* loader_ptr = bs_get_symbol(dll, "bytescript_module_loader");
     if (!loader_ptr) {
         TValue error_message = make_fstring("Could not find loader for module <%s>. Make sure to store your module's loader in a function 'TValue bytescript_module_loader(TValue* argv, size_t argc)'");
         error_message = format_string((TValue[2]){ error_message, type }, 2);

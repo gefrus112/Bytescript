@@ -1,0 +1,3 @@
+import "Base64.dll" as Base64 end
+print(Base64:encode("hi"))
+print(Base64:decode("aGk="))

@@ -35,8 +35,11 @@ TValue read_file(TValue* argv, size_t argc) {
 
     size_t read = fread(str->str, 1, size, file->handle);
     str->str[read] = '\0';
+    str->len = read;
 
-    fclose(file->handle);
+    /* The handle stays open: it belongs to the File object and is closed
+     * by close_file(). Closing it here as well made every File:read()
+     * followed by File:close() a double fclose (abort on glibc). */
     return STR_TO_TVALUE(str);
 }
 
@@ -59,11 +62,13 @@ TValue close_file(TValue* argv, size_t argc) {
     if (TYPE(argv[0]) != OBJECT) call_error(new_type_error, "function <File.close> take type <File> as argument");
 
     TObject* obj = AS_OBJECT(argv[0]);
-    TStr* content = AS_STRING(argv[1]);
     TValue tfile = obj->fields[0];
 
     FileData* file = as_filedata(tfile);
-    fclose(file->handle);
+    if (file->handle) {
+        fclose(file->handle);
+        file->handle = NULL; /* closing twice is now a no-op */
+    }
 
     return NIL;
 }

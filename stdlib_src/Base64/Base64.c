@@ -1,3 +1,4 @@
+#include "platform.h"
 #include "Base64/Base64.h"
 #include "Math/math_utils.h"
 
@@ -11,8 +12,8 @@ const char base64_encode_table[] = {
     "0123456789+/"
 };
 
-__declspec(dllexport) char* bytescript_module_map = "Base64_map.bs";
-__declspec(dllexport) TValue bytescript_module_loader(TValue* argv, size_t argc) {
+BS_EXPORT char* bytescript_module_map = "Base64_map.bs";
+BS_EXPORT TValue bytescript_module_loader(TValue* argv, size_t argc) {
     TValue fields[] = {
         new_cfunc(encode_base64),
         new_cfunc(decode_base64),

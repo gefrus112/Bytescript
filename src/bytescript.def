@@ -84,6 +84,7 @@ EXPORTS
         new_unknown_identifier_error
         new_unidentified_character_error
         call_error
+        bs_set_error_jmp
 
         ; -------- IO -------- 
 

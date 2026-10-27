@@ -1,11 +1,22 @@
-#include <direct.h>
-#include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include "platform.h"
+#ifdef _WIN32
+#include <direct.h>
+#define bs_getcwd _getcwd
+#define bs_chdir _chdir
+#else
+#include <unistd.h>
+#define bs_getcwd getcwd
+#define bs_chdir chdir
+#endif
 
+#include "platform.h"
 #include "OS/OS.h"
 
-__declspec(dllexport) char* bytescript_module_map = "OS_map.bs";
-__declspec(dllexport) TValue bytescript_module_loader(TValue* argv, size_t argc) {
+BS_EXPORT char* bytescript_module_map = "OS_map.bs";
+BS_EXPORT TValue bytescript_module_loader(TValue* argv, size_t argc) {
     TValue fields[] = {
         new_cfunc(env_os),
         new_cfunc(cwd_os),
@@ -34,7 +45,7 @@ TValue env_os(TValue* argv, size_t argc) {
 }
 
 TValue cwd_os(TValue* argv, size_t argc) {
-    char* cwd = _getcwd(NULL, 0);
+    char* cwd = bs_getcwd(NULL, 0);
     TValue tcwd = make_fstring(cwd);
 
     free(cwd);
@@ -43,7 +54,7 @@ TValue cwd_os(TValue* argv, size_t argc) {
 
 TValue chdir_os(TValue* argv, size_t argc) {
     MIN_ARGC(1); TYPE_CHECK(0, STRING, "String", "OS.chdir");
-    _chdir(AS_STRING(argv[0])->str);
+    bs_chdir(AS_STRING(argv[0])->str);
 
     return NIL;
 }
@@ -52,10 +63,22 @@ TValue absolute_os(TValue* argv, size_t argc) {
     MIN_ARGC(1); TYPE_CHECK(0, STRING, "String", "OS.absolute");
 
     TStr* str = AS_STRING(*argv);
+#ifdef _WIN32
     size_t len = GetFullPathNameA(str->str, 0, NULL, NULL);
 
     char buffer[len]; GetFullPathNameA(str->str, len, buffer, NULL);
     return make_fstring(buffer);
+#else
+    char buffer[PATH_MAX];
+    if (realpath(str->str, buffer)) return make_fstring(buffer);
+
+    /* Path does not exist (yet): make it absolute against the cwd. */
+    if (str->str[0] == '/') return *argv;
+    char* cwd = getcwd(NULL, 0);
+    snprintf(buffer, sizeof(buffer), "%s/%s", cwd ? cwd : ".", str->str);
+    free(cwd);
+    return make_fstring(buffer);
+#endif
 }
 
 TValue normalize_os(TValue* argv, size_t argc) {
@@ -142,7 +165,8 @@ TValue parent_os(TValue* argv, size_t argc) {
     MIN_ARGC(1); TYPE_CHECK(0, STRING, "String", "OS.parent");
     TStr* str = AS_STRING(absolute_os(argv, 1));
 
-    char* filename = strrchr(str->str, '\\');
+    char* filename = strrchr(str->str, BS_PATH_SEP);
+    if (!filename) filename = strrchr(str->str, '/');
     if (!filename) filename = str->str;
 
     return make_string(str->str, filename - str->str);

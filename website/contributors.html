@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contributors — Bytescript</title>
+<meta name="description" content="The people who built Bytescript, and how you can join them.">
+<link rel="icon" href="favicon.ico">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="site">
+  <div class="nav">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="Bytescript logo">Bytescript <span class="ver">v1.1.0</span></a>
+    <button class="icon-btn nav-toggle" type="button" aria-label="Menu">☰</button>
+    <nav class="main">
+      <a href="index.html">Home</a>
+      <a href="docs.html">Docs</a>
+      <a href="install.html">Install</a>
+      <a href="download.html">Download</a>
+      <a href="contributors.html">Contributors</a>
+      <a href="https://github.com/gefrus112/Bytescript">GitHub ↗</a>
+    </nav>
+    <button class="icon-btn theme-toggle" type="button" title="Toggle light/dark theme">🌗</button>
+  </div>
+</header>
+
+<main class="wrap">
+<h1>Contributors</h1>
+<p>Bytescript is built by volunteers in the open. Thank you to everyone who has written code, docs or bug reports for it. <span id="contributors-note" class="muted">This list refreshes itself from GitHub when you're online.</span></p>
+
+<div class="grid" id="contributors-live">
+  <!-- baked-in snapshot (replaced live by the GitHub API when available) -->
+  <div class="card person">
+    <img class="avatar" src="https://avatars.githubusercontent.com/u/146124313?v=4" alt="ayteam8" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="avatar-fallback">a</div>
+    <h3>ayteam8</h3>
+    <p class="muted">Creator &amp; lead developer · 138 contributions</p>
+    <p>Designed the language and wrote the compiler, the bytecode VM, the type resolver and most of the standard library.</p>
+    <p><a href="https://github.com/ayteam8">GitHub profile</a></p>
+  </div>
+  <div class="card person">
+    <img class="avatar" src="https://avatars.githubusercontent.com/u/104579306?v=4" alt="Guille-ux" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="avatar-fallback">G</div>
+    <h3>Guille-ux</h3>
+    <p class="muted">Contributor · 4 contributions</p>
+    <p>Contributions merged via pull request — the first external contributor to the project.</p>
+    <p><a href="https://github.com/Guille-ux">GitHub profile</a></p>
+  </div>
+  <div class="card person">
+    <img class="avatar" src="https://github.com/gefrus112.png" alt="gefrus112" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="avatar-fallback">g</div>
+    <h3>gefrus112</h3>
+    <p class="muted">Repository owner &amp; maintainer</p>
+    <p>Hosts and maintains the project on GitHub.</p>
+    <p><a href="https://github.com/gefrus112">GitHub profile</a></p>
+  </div>
+</div>
+
+<div class="card" style="text-align:center">
+  <div style="font-size:2rem">🙋</div>
+  <h3>Your name here?</h3>
+  <p>Bytescript grows one pull request at a time. Fixes, features, docs and exemples are all welcome — the next card on this page could be yours.</p>
+  <p><a class="btn primary small" href="#how-to-contribute">How to contribute</a> <a class="btn small" href="https://github.com/gefrus112/Bytescript">Open the repository</a></p>
+</div>
+
+<h2 id="how-to-contribute">How to contribute</h2>
+<div class="steps">
+  <div class="step"><h3>Fork &amp; clone</h3>
+<pre><code># fork on GitHub first, then:
+git clone https://github.com/YOUR-USERNAME/Bytescript.git
+cd Bytescript
+git checkout -b my-change</code></pre></div>
+
+  <div class="step"><h3>Build it</h3>
+<pre><code>make          # Windows/MSYS2: mingw32-make
+./dist/bytescript --version</code></pre>
+    <p>Project layout: <code>src/</code> interpreter (Lexer, Parser, TypeResolving, Compiler, VM, Globals), <code>stdlib_src/</code> standard library in C, <code>exemples/</code> sample programs, <code>docs/</code> + <code>website/</code> documentation, <code>tests/</code> test suite.</p></div>
+
+  <div class="step"><h3>Make your change — with a test</h3>
+    <p>Language changes should come with a test: drop a <code>NN_name.bs</code> in <code>tests/</code> plus a <code>NN_name.expected</code> file containing exactly what it should print (trailing tabs from <code>print</code> are ignored).</p></div>
+
+  <div class="step"><h3>Run the test suite</h3>
+<pre><code>make test     # or: ./tests/run_tests.sh
+# passed: 24  failed: 0   (plus your new tests!)</code></pre></div>
+
+  <div class="step"><h3>Open a pull request</h3>
+    <p>Push your branch and open a PR against <code>main</code>. Describe what you changed and why; CI will build and test your change on Windows, Ubuntu and macOS automatically.</p></div>
+</div>
+
+<h2>Good first contributions</h2>
+<div class="grid">
+  <div class="card"><h3>🐛 Fix a known limitation</h3><p>The docs list <a href="docs.html#limitations">known limitations</a> — making <code>else</code>/<code>elseif</code> work properly is a great, self-contained project. Function-to-function calls are the big one. Shrink it with <code>bytescript -e</code> snippets, fix it, add a regression test.</p></div>
+  <div class="card"><h3>📚 Documentation &amp; exemples</h3><p>New programs for <code>exemples/</code>, clearer explanations in <code>docs/</code> or this website, translations — all valuable, no C required.</p></div>
+  <div class="card"><h3>🧪 More tests</h3><p>Exercise a stdlib module (<code>Json</code>, <code>OS</code>, <code>Random</code>…) or a language corner and lock the behaviour in with a test file.</p></div>
+  <div class="card"><h3>🔌 New C modules</h3><p>Add a standard-library module in C (HTTP? directories? regex?) following the pattern in <code>stdlib_src/</code> — see <a href="docs.html#embedding">Embedding</a>.</p></div>
+</div>
+
+<p class="muted">Be kind in issues and reviews — everybody here is learning, including the maintainers. By contributing you agree your work is released under the project's MIT licence.</p>
+</main>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div><h4>Bytescript</h4><p>A small object-oriented language in C.<br>Free and open source (MIT).</p></div>
+    <div><h4>Project</h4><ul>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="install.html">Install guide</a></li>
+      <li><a href="download.html">Download</a></li>
+      <li><a href="contributors.html">Contributors</a></li>
+    </ul></div>
+    <div><h4>GitHub</h4><ul>
+      <li><a href="https://github.com/gefrus112/Bytescript">Repository</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/releases">Releases</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/issues">Issues</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/CHANGELOG.md">Changelog</a></li>
+    </ul></div>
+    <div><h4>Deep docs</h4><ul>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/syntax.md">Syntax (Markdown)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/stdlib.md">Standard library (Markdown)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/embedding.md">Embedding in C</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/bvm.md">The BVM</a></li>
+    </ul></div>
+  </div>
+</footer>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

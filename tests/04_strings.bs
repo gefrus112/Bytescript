@@ -1,0 +1,12 @@
+-- Regression test: method calls / concat on string literals used to fail.
+String name = "Bytescript"
+print("Welcome to " .. name)
+print(name .. "!")
+print("abc":len())
+print(name:len())
+String out = ""
+String s = "abc"
+for i = s:len() - 1, -1, -1 repeat
+    out = out .. s[i]
+end
+print(out)

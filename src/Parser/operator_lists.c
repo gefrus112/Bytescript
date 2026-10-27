@@ -1,46 +1,49 @@
 #include "Parser/parser.h"
 #include "Globals/string.h"
 
+/* NOTE: plain brace initializers (not `(Token){ ..., .value = NIL }`) so
+ * these tables are valid constant initializers on every C compiler. */
+
 
 Token LOGICAL_OPERATORS[] = {
-    (Token){ .tt = TT_RAND, .value = NIL },
-    (Token){ .tt = TT_ROR, .value = NIL },
-    (Token){ .tt = TT_AND, .value = NIL },
-    (Token){ .tt = TT_OR, .value = NIL },
-    (Token){ .tt = TT_BAND, .value = NIL },
-    (Token){ .tt = TT_BOR, .value = NIL },
-    (Token){ .tt = TT_BXOR, .value = NIL },
+    { .tt = TT_RAND, .value = { .nan = QNaN } },
+    { .tt = TT_ROR, .value = { .nan = QNaN } },
+    { .tt = TT_AND, .value = { .nan = QNaN } },
+    { .tt = TT_OR, .value = { .nan = QNaN } },
+    { .tt = TT_BAND, .value = { .nan = QNaN } },
+    { .tt = TT_BOR, .value = { .nan = QNaN } },
+    { .tt = TT_BXOR, .value = { .nan = QNaN } },
 };
 
 Token COMP_OPERATORS[] = {
-    (Token){ .tt = TT_EEQ, .value = NIL },
-    (Token){ .tt = TT_NEQ, .value = NIL },
-    (Token){ .tt = TT_LT, .value = NIL },
-    (Token){ .tt = TT_GT, .value = NIL },
-    (Token){ .tt = TT_LTEQ, .value = NIL },
-    (Token){ .tt = TT_GTEQ, .value = NIL }
+    { .tt = TT_EEQ, .value = { .nan = QNaN } },
+    { .tt = TT_NEQ, .value = { .nan = QNaN } },
+    { .tt = TT_LT, .value = { .nan = QNaN } },
+    { .tt = TT_GT, .value = { .nan = QNaN } },
+    { .tt = TT_LTEQ, .value = { .nan = QNaN } },
+    { .tt = TT_GTEQ, .value = { .nan = QNaN } }
 };
 
 Token ARITHMETIC_OPERATORS[] = {
-    (Token){ .tt = TT_PLUS, .value = NIL },
-    (Token){ .tt = TT_MINUS, .value = NIL },
-    (Token){ .tt = TT_CONCAT, .value = NIL }
+    { .tt = TT_PLUS, .value = { .nan = QNaN } },
+    { .tt = TT_MINUS, .value = { .nan = QNaN } },
+    { .tt = TT_CONCAT, .value = { .nan = QNaN } }
 };
 
 Token TERM_OPERATORS[] = {
-    (Token){ .tt = TT_MUL, .value = NIL },
-    (Token){ .tt = TT_DIV, .value = NIL },
-    (Token){ .tt = TT_IDIV, .value = NIL },
-    (Token){ .tt = TT_MOD, .value = NIL }
+    { .tt = TT_MUL, .value = { .nan = QNaN } },
+    { .tt = TT_DIV, .value = { .nan = QNaN } },
+    { .tt = TT_IDIV, .value = { .nan = QNaN } },
+    { .tt = TT_MOD, .value = { .nan = QNaN } }
 };
 
 Token FACTOR_OPERATORS[] = {
-    (Token){ .tt = TT_PLUS, .value = NIL },
-    (Token){ .tt = TT_MINUS, .value = NIL }
+    { .tt = TT_PLUS, .value = { .nan = QNaN } },
+    { .tt = TT_MINUS, .value = { .nan = QNaN } }
 };
 
 Token POWER_OPERATORS[] = {
-    (Token){ .tt = TT_POW, .value = NIL }
+    { .tt = TT_POW, .value = { .nan = QNaN } }
 };
 
 

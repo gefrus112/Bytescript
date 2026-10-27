@@ -1,6 +1,8 @@
 #ifndef ERROR_H
 #define ERROR_h
 
+#include <setjmp.h>
+
 #include "Values/bytev.h"
 #include "Values/oop.h"
 #include "Globals/globals.h"
@@ -32,5 +34,11 @@ TValue new_unknown_identifier_error(TValue* argv, size_t argc);
 TValue new_unidentified_character_error(TValue* argv, size_t argc);
 
 void call_error(CFunc err_func, char details[]);
+
+/* Recoverable errors: by default a Bytescript error prints its message and
+ * exits the process. Embedders (and the REPL) can instead install a jump
+ * buffer with bs_set_error_jmp(); errors then longjmp() to it after printing,
+ * letting the host recover. Pass NULL to restore the default behaviour. */
+void bs_set_error_jmp(jmp_buf* buf);
 
 #endif

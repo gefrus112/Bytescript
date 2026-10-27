@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <windows.h>
 
 #include "Globals/error.h"
 #include "Globals/string.h"
@@ -266,7 +265,7 @@ Node* require_expr(ParseResult* res) {
 
     ERR_CHECK(expect(res, TT_KWORD, "(KEYWORD:'end') EXPECTED", NULL, "end"))
 
-    nt = has_ext(module, ".dll") ? NT_CREQUIRE : NT_REQUIRE;
+    nt = bs_is_shared_library(AS_STRING(module)->str) ? NT_CREQUIRE : NT_REQUIRE;
 
     Node* require_node = new_node(nt);
     require_node->node.importNode.module = module;
@@ -274,7 +273,7 @@ Node* require_expr(ParseResult* res) {
     require_node->node.importNode.identifier = identifier;
     if (nt == NT_REQUIRE) require_node->node.importNode.ast = simple_parse(AS_STRING(require_node->node.importNode.module)->str);
     else {
-        HMODULE dll = LoadLibrary(AS_STRING(module)->str);
+        BSModule dll = bs_load_library(AS_STRING(module)->str);
         if (!dll) {
             TValue error_message = make_fstring("Could not open shared library '%s'");
             error_message = format_string((TValue[2]){ error_message, module }, 2);
@@ -282,7 +281,7 @@ Node* require_expr(ParseResult* res) {
             call_error(new_failed_allocation_error, AS_STRING(error_message)->str);
         }
 
-        void* filename_ptr = GetProcAddress(dll, "bytescript_module_map");
+        void* filename_ptr = bs_get_symbol(dll, "bytescript_module_map");
         if (!filename_ptr) {
             TValue error_message = make_fstring("Could not find a map for module '%s'. Make sure to store the path to your module's map in a variable of named : 'bytescript_module_map'");
             error_message = format_string((TValue[2]){ error_message, module }, 2);
@@ -306,7 +305,7 @@ Node* from_import_expr(ParseResult* res) {
     ERR_CHECK(expect(res, TT_STR, "(STR) EXPECTED", &module, NULL))
     ERR_CHECK(expect(res, TT_KWORD, "(KEYWORD:'import') EXPECTED", NULL, "import"))
 
-    Node* import_node = has_ext(module, "dll") ? new_node(NT_CIMPORT) : new_node(NT_IMPORT);
+    Node* import_node = bs_is_shared_library(AS_STRING(module)->str) ? new_node(NT_CIMPORT) : new_node(NT_IMPORT);
     import_node->node.importNode.identifier = NIL;
     import_node->node.importNode.module = module;
     if (import_node->nt == NT_IMPORT) import_node->node.importNode.ast = simple_parse(AS_STRING(module)->str);
@@ -365,7 +364,7 @@ Node* import_expr(ParseResult* res) {
     ERR_CHECK(expect(res, TT_IDENTIFIER, "(IDENTIFIER) EXPECTED", &identifier, NULL));
     ERR_CHECK(expect(res, TT_KWORD, "(KEYWORD:'end') EXPECTED", NULL, "end"))
 
-    nt = has_ext(module, ".dll") ? NT_CIMPORT : NT_IMPORT;
+    nt = bs_is_shared_library(AS_STRING(module)->str) ? NT_CIMPORT : NT_IMPORT;
     module = import_path_finder(module);
 
     Node* import_node = new_node(nt);
@@ -374,8 +373,15 @@ Node* import_expr(ParseResult* res) {
     import_node->node.importNode.identifier = identifier;
     if (nt == NT_IMPORT) import_node->node.importNode.ast = simple_parse(AS_STRING(import_node->node.importNode.module)->str);
     else {
-        HMODULE dll = LoadLibrary(AS_STRING(module)->str);
-        void* filename_ptr = GetProcAddress(dll, "bytescript_module_map");
+        BSModule dll = bs_load_library(AS_STRING(module)->str);
+        if (!dll) {
+            TValue error_message = make_fstring("Could not open shared library '%s'");
+            error_message = format_string((TValue[2]){ error_message, module }, 2);
+
+            call_error(new_failed_allocation_error, AS_STRING(error_message)->str);
+        }
+
+        void* filename_ptr = bs_get_symbol(dll, "bytescript_module_map");
 
         if (!filename_ptr) {
             TValue error_message = make_fstring("Could not find a map for module '%s'. Make sure to store the path to your module's map in a variable of named : 'bytescript_module_map'");
@@ -561,7 +567,7 @@ Node* arithmetic(ParseResult* res) { return bin_op(res, term, ARITHMETIC_OPERATO
 
 Node* comparaison(ParseResult* res) {
     if (match_tt(*res->tokens, TT_NOT)) {
-        Token op = *res->tokens;
+        Token op = *res->tokens++; /* consume `not`/`!` (was missing: infinite recursion) */
         Node* target = EXPECTED(comparaison(res), "(POSTFIX | INT | STR | FUNC | TABLE | IDENTIFIER) EXPECTED");
 
         Node* return_node = new_node(NT_UNI_OP);

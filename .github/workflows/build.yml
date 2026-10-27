@@ -1,0 +1,43 @@
+name: Build & test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up MinGW (Windows)
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-make
+
+      - name: Build & test (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: |
+          mingw32-make release
+          ./tests/run_tests.sh
+
+      - name: Build & test (Linux / macOS)
+        if: runner.os != 'Windows'
+        run: |
+          make release
+          ./tests/run_tests.sh
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: bytescript-${{ matrix.os }}
+          path: dist/

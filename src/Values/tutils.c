@@ -3,7 +3,7 @@
 #include "Lexer/lexer.h"
 
 #include <sys/stat.h>
-#include <windows.h>
+#include "platform.h"
 
 
 TValue to_return_value(TValue returnv[], size_t returnc) {
@@ -15,8 +15,8 @@ TValue to_return_value(TValue returnv[], size_t returnc) {
 TValue import_path_finder(TValue path) {
     struct stat st;
 
-    char buff[32767]; GetModuleFileName(NULL, buff, 32767);
-    char* last = strrchr(buff, '\\'); if (last) *(last + 1) = '\0';
+    char buff[4096];
+    if (!bs_executable_dir(buff, sizeof(buff))) buff[0] = '\0';
 
     TValue exec_path = make_fstring(buff);
     TValue stdlib_path = concat_string((TValue[2]){ exec_path, make_fstring("stdlib/") }, 2);
@@ -25,6 +25,22 @@ TValue import_path_finder(TValue path) {
 
     if (!stat(AS_STRING(path)->str, &st)) return path;
     if (!stat(AS_STRING(stdlib_try)->str, &st)) return stdlib_try;
+
+    /* Portability shortcut: Bytescript code written on another OS may ask
+     * for e.g. "Time.dll" while this platform ships "Time.so"/"Time.dylib".
+     * Retry with this platform's shared-library extension so existing
+     * programs keep working unchanged. */
+    if (bs_is_shared_library(AS_STRING(path)->str)) {
+        const char* raw = AS_STRING(path)->str;
+        const char* dot = strrchr(raw, '.');
+        if (dot && strcmp(dot, BS_SHARED_EXT)) {
+            TValue swapped = concat_string((TValue[2]){ make_string((char*)raw, dot - raw), make_fstring(BS_SHARED_EXT) }, 2);
+            TValue swapped_stdlib_try = concat_string((TValue[2]){ stdlib_path, swapped }, 2);
+
+            if (!stat(AS_STRING(swapped)->str, &st)) return swapped;
+            if (!stat(AS_STRING(swapped_stdlib_try)->str, &st)) return swapped_stdlib_try;
+        }
+    }
 
     TValue error_message = make_fstring("Could not find file <%s>");
     error_message = format_string((TValue[2]){ error_message, path }, 2);

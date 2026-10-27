@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bytescript — a small object-oriented language in C</title>
+<meta name="description" content="Bytescript is an object-oriented, embeddable programming language with a bytecode VM, written in C. Now on Windows, Linux and macOS.">
+<link rel="icon" href="favicon.ico">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="site">
+  <div class="nav">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="Bytescript logo">Bytescript <span class="ver">v1.1.0</span></a>
+    <button class="icon-btn nav-toggle" type="button" aria-label="Menu">☰</button>
+    <nav class="main">
+      <a href="index.html">Home</a>
+      <a href="docs.html">Docs</a>
+      <a href="install.html">Install</a>
+      <a href="download.html">Download</a>
+      <a href="contributors.html">Contributors</a>
+      <a href="https://github.com/gefrus112/Bytescript">GitHub ↗</a>
+    </nav>
+    <button class="icon-btn theme-toggle" type="button" title="Toggle light/dark theme">🌗</button>
+  </div>
+</header>
+
+<div class="hero">
+  <img src="assets/logo.svg" alt="Bytescript logo">
+  <h1>Bytescript</h1>
+  <p class="tag">A small, object-oriented, embeddable programming language with its own bytecode VM — written in C, now running on Windows, Linux and macOS.</p>
+  <div class="cta">
+    <a class="btn primary" href="download.html">⬇&nbsp; Download Bytescript</a>
+    <a class="btn" href="docs.html">Read the docs</a>
+    <a class="btn" href="install.html">Installation guide</a>
+  </div>
+  <div class="badges">
+    <span class="badge">version 1.1.0</span>
+    <span class="badge">Windows · Linux · macOS</span>
+    <span class="badge">written in C</span>
+    <span class="badge">MIT licence</span>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <h2>See it in action</h2>
+  <div data-tabs="demos">
+    <div class="tabs">
+      <button class="tab-btn active" type="button" data-tab="demo-hello">hello.bs</button>
+      <button class="tab-btn" type="button" data-tab="demo-fib">fibonacci</button>
+      <button class="tab-btn" type="button" data-tab="demo-class">classes</button>
+      <button class="tab-btn" type="button" data-tab="demo-fizz">fizzbuzz</button>
+    </div>
+
+    <div class="tab-panel active" id="demo-hello">
+<pre><code class="lang-bytescript">-- hello.bs - your first Bytescript program
+print("Hello, World!")
+
+String name = "Bytescript"
+print("Welcome to " .. name)</code></pre>
+<pre class="output"><code>Hello, World!
+Welcome to Bytescript</code></pre>
+    </div>
+
+    <div class="tab-panel" id="demo-fib">
+<pre><code class="lang-bytescript">func Number fib(Number n)
+    if n &lt;= 1 then return n end
+
+    Number a = 0
+    Number b = 1
+
+    for i = 1, n repeat
+        Number tmp = a + b
+        a = b
+        b = tmp
+    end
+
+    return b
+end
+
+print(fib(10))</code></pre>
+<pre class="output"><code>55</code></pre>
+      <p class="muted">…and it is quick: the bundled benchmark measures <code>fib(500)</code> at a few microseconds per call (bytecode VM with NaN-boxed values).</p>
+    </div>
+
+    <div class="tab-panel" id="demo-class">
+<pre><code class="lang-bytescript">class Counter
+    func static Counter __new()
+        Number self.value = 0
+        return self
+    end
+
+    func increment()
+        self.value = self.value + 1
+    end
+
+    func Number get()
+        return self.value
+    end
+end
+
+Counter clicks = Counter:new()
+clicks:increment()
+clicks:increment()
+print(clicks:get())</code></pre>
+<pre class="output"><code>2</code></pre>
+    </div>
+
+    <div class="tab-panel" id="demo-fizz">
+<pre><code class="lang-bytescript">for i = 1, 16 repeat
+    if i % 15 == 0 then print("FizzBuzz") end
+    if i % 15 != 0 and i % 3 == 0 then print("Fizz") end
+    if i % 15 != 0 and i % 5 == 0 then print("Buzz") end
+    if i % 3 != 0 and i % 5 != 0 then print(i) end
+end</code></pre>
+<pre class="output"><code>1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+FizzBuzz</code></pre>
+    </div>
+  </div>
+
+  <h2>What you get</h2>
+  <div class="grid">
+    <div class="card"><div class="ico">🧩</div><h3>Object-oriented</h3><p>Classes, constructors (<code>__new</code>), methods, static methods and operator overloading through dunder methods like <code>__concat</code>.</p></div>
+    <div class="card"><div class="ico">🏷️</div><h3>Optional types</h3><p>Annotate variables, arguments and return values (<code>Number</code>, <code>String</code>, <code>Table</code>, your own classes…) or use <code>var</code> and let it flow. Types are checked before your code runs.</p></div>
+    <div class="card"><div class="ico">🗂️</div><h3>One mighty Table</h3><p>Tables are both arrays and hash maps, with slicing, filling, copying, iteration and more built in.</p></div>
+    <div class="card"><div class="ico">⚙️</div><h3>Bytecode VM</h3><p>Your code compiles to bytecode for a register-based VM. Every value is a NaN-boxed 64-bit word, so numbers never allocate.</p></div>
+    <div class="card"><div class="ico">🔌</div><h3>Embeddable in C</h3><p>Link <code>bytescript.lib</code> / <code>libbytescript</code>, include <code>bytescript.h</code>, run scripts or write your own C modules — that's how the whole standard library is made.</p></div>
+    <div class="card"><div class="ico">🖥️</div><h3>Cross-platform <span class="ver badge">new in 1.1</span></h3><p>Builds and runs on Windows, Linux and macOS from the same sources. Old code importing <code>"Time.dll"</code> keeps working everywhere.</p></div>
+  </div>
+
+  <h2>Quick start</h2>
+  <div class="steps">
+    <div class="step"><h3>Get Bytescript</h3><p>Download a build, or compile it yourself (GCC + make, two minutes):</p>
+<pre><code>git clone https://github.com/gefrus112/Bytescript.git
+cd Bytescript
+make</code></pre>
+    <p><a href="install.html">Full step-by-step install guide →</a></p></div>
+
+    <div class="step"><h3>Write a program</h3><p>Save this as <code>hello.bs</code>:</p>
+<pre><code class="lang-bytescript">String who = "world"
+print("Hello, " .. who .. "!")</code></pre></div>
+
+    <div class="step"><h3>Run it</h3>
+<pre><code>bytescript hello.bs
+bytescript -e "print(6 * 7)"   -- run a snippet
+bytescript                      -- interactive REPL</code></pre>
+    <p>Then explore the <a href="docs.html">documentation</a> and the bundled <code>exemples/</code> programs.</p></div>
+  </div>
+
+  <h2>Standard library</h2>
+  <p>Batteries included — built-ins are always available, library modules are imported by name:</p>
+  <div class="grid">
+    <div class="card"><h3>Built-ins</h3><p><code>print</code>, <code>input</code>, <code>exec</code>… plus rich <code>Table</code>, <code>String</code>, <code>IO</code>/<code>File</code> and <code>Error</code> classes.</p></div>
+    <div class="card"><h3>Math</h3><p><code>sqrt</code>, <code>sin</code>/<code>cos</code>/<code>tan</code>, <code>floor</code>, <code>clamp</code>, constants <code>pi</code>, <code>e</code>, <code>inf</code> and friends.</p></div>
+    <div class="card"><h3>OS &amp; Time</h3><p>Environment, paths, working directory, running commands; wall clock, high-precision clock and <code>sleep</code>.</p></div>
+    <div class="card"><h3>Json</h3><p>Parse, stringify, validate and load/save JSON files as Bytescript tables.</p></div>
+    <div class="card"><h3>Random &amp; Base64</h3><p>Seeded random numbers and ranges; Base64 encode/decode.</p></div>
+    <div class="card"><h3>Debug</h3><p>Assertions with proper <code>AssertionError</code>s, plus a bytecode disassembler.</p></div>
+  </div>
+  <p><a href="docs.html#stdlib">Browse the full standard library reference →</a></p>
+
+  <h2>New in 1.1</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Linux &amp; macOS support</strong> — full port of the interpreter and every C stdlib module.</li>
+      <li><strong>New CLI</strong> — <code>--help</code>, <code>--version</code>, <code>-e "code"</code> and an interactive REPL that survives errors.</li>
+      <li><strong>Real bug fixes</strong> — <code>!=</code>, variable <code>&lt;</code> comparisons, unary <code>-</code>/<code>not</code> and method calls on literals used to crash or miscompute; there's a test suite (<code>make test</code>) guarding them now.</li>
+      <li><strong>This website</strong>, a VS Code syntax-highlighting extension, and CI builds for all three OSes.</li>
+    </ul>
+    <p><a href="https://github.com/gefrus112/Bytescript/blob/main/CHANGELOG.md">Full changelog →</a></p>
+  </div>
+
+</main>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div><h4>Bytescript</h4><p>A small object-oriented language in C.<br>Free and open source (MIT).</p></div>
+    <div><h4>Project</h4><ul>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="install.html">Install guide</a></li>
+      <li><a href="download.html">Download</a></li>
+      <li><a href="contributors.html">Contributors</a></li>
+    </ul></div>
+    <div><h4>GitHub</h4><ul>
+      <li><a href="https://github.com/gefrus112/Bytescript">Repository</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/releases">Releases</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/issues">Issues</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/CHANGELOG.md">Changelog</a></li>
+    </ul></div>
+    <div><h4>Deep docs</h4><ul>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/syntax.md">Syntax (Markdown)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/stdlib.md">Standard library (Markdown)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/embedding.md">Embedding in C</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/bvm.md">The BVM</a></li>
+    </ul></div>
+  </div>
+</footer>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

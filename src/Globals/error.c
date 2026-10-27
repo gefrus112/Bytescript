@@ -2,6 +2,10 @@
 #include "Globals/string.h"
 #include "Values/bytescript_funcs.h"
 
+static jmp_buf* bs_error_jmp = NULL;
+
+void bs_set_error_jmp(jmp_buf* buf) { bs_error_jmp = buf; }
+
 TValue Error_class;
 TValue TypeError;
 TValue IndexError;
@@ -56,7 +60,9 @@ TValue new_error(TValue* argv, size_t argc) {
     printf("%s : \n\t", AS_STRING(name)->str);
     printf("%s\n", AS_STRING(details)->str);
     printf("\n");
+    fflush(stdout);
 
+    if (bs_error_jmp) longjmp(*bs_error_jmp, 1);
     exit(1);
 }
 

@@ -168,11 +168,12 @@ The following operators exist in bytescript :
 - *STAR* (*)
 - *SLASH* (/), (//) for floor division
 - *MODULO* (%)
-- *POWER* (^)
+- *POWER* (**)
+- *BITWISE XOR* (^)
 - *CONCAT* (..), shortcut to string:concat()
 - *BOOLEANS* (and, or, ||, &&)
 - *COMPARAISONS* (==, !=, <, >, <=, >=)
-- *BITWISE* (&, |)
+- *BITWISE* (&, |, ^)
 - [*POSTFIX*](#postfix-operations)
 
 The order of priority is the following :
@@ -252,3 +253,14 @@ A function is a [*constant*](bvm.md#constants)
 
 The `File` class is defined in the `IO` module  
 see more about bytescript's [standard library](stdlib.md)  
+
+# Known limitations
+
+- A function cannot call another user-defined function *by name* (this
+  includes recursion): inside a function body only built-ins/globals,
+  parameters, methods and module functions are visible. To do higher-order
+  programming, pass the function as an argument.
+- `else` / `elseif` branches are currently unreliable. Prefer separate
+  `if` statements with explicit conditions.
+- The numeric `for` loop's end value is **exclusive**:
+  `for i = 0, 3 repeat` iterates `i = 0, 1, 2`.

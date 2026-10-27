@@ -1,0 +1,26 @@
+-- NOTE: Bytescript functions cannot call other user functions by name yet
+-- (see docs "Known limitations"), so fib/factorial here are iterative.
+func Number fib(Number n)
+    if n <= 1 then return n end
+    Number a = 0
+    Number b = 1
+    for i = 1, n repeat
+        Number tmp = a + b
+        a = b
+        b = tmp
+    end
+    return b
+end
+print(fib(10))
+func Number fact(Number n)
+    Number acc = 1
+    for i = 1, n + 1 repeat
+        acc = acc * i
+    end
+    return acc
+end
+print(fact(5))
+func Number apply(Function f, Number x)
+    return f(x)
+end
+print(apply(fib, 7))

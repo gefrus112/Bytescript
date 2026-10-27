@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install Bytescript — Windows, Linux &amp; macOS guide</title>
+<meta name="description" content="Step-by-step guide to installing the Bytescript programming language: download a release or build from source, set your PATH, and run your first program.">
+<link rel="icon" href="favicon.ico">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="site">
+  <div class="nav">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="Bytescript logo">Bytescript <span class="ver">v1.1.0</span></a>
+    <button class="icon-btn nav-toggle" type="button" aria-label="Menu">☰</button>
+    <nav class="main">
+      <a href="index.html">Home</a>
+      <a href="docs.html">Docs</a>
+      <a href="install.html">Install</a>
+      <a href="download.html">Download</a>
+      <a href="contributors.html">Contributors</a>
+      <a href="https://github.com/gefrus112/Bytescript">GitHub ↗</a>
+    </nav>
+    <button class="icon-btn theme-toggle" type="button" title="Toggle light/dark theme">🌗</button>
+  </div>
+</header>
+
+<main class="wrap">
+<h1>How to install Bytescript</h1>
+<p>There are two ways to get Bytescript: <strong>download a ready-made build</strong> (easiest) or <strong>compile it from source</strong> (about two minutes, works everywhere). Pick your operating system — we tried to guess it for you.</p>
+<p class="muted">However you install it, one rule matters: <strong>keep the whole <code>dist/</code> folder together</strong>. The interpreter finds its standard library in the <code>stdlib/</code> folder sitting next to the executable.</p>
+
+<div data-tabs="os">
+  <div class="tabs">
+    <button class="tab-btn" type="button" data-tab="os-windows">🪟 Windows</button>
+    <button class="tab-btn" type="button" data-tab="os-linux">🐧 Linux</button>
+    <button class="tab-btn" type="button" data-tab="os-macos">🍎 macOS</button>
+  </div>
+
+  <!-- WINDOWS -->
+  <div class="tab-panel" id="os-windows">
+    <h2>Windows</h2>
+    <h3>Option A — download a release (recommended)</h3>
+    <div class="steps">
+      <div class="step"><h3>Download</h3><p>Grab the latest Windows build from the <a href="download.html">download page</a> (a <code>.zip</code> containing a <code>dist</code> folder with <code>bytescript.exe</code>, <code>bytescript.dll</code> and <code>stdlib/</code>).</p></div>
+      <div class="step"><h3>Unzip somewhere permanent</h3><p>For example <code>C:\Program Files\Bytescript\</code>. You should end up with:</p>
+<pre><code>C:\Program Files\Bytescript\
+├── bytescript.exe
+├── bytescript.dll / bytescript.lib
+├── bytescript.h / bytev.h
+└── stdlib\   (Math, Time, OS... modules)</code></pre></div>
+      <div class="step"><h3>Add it to your PATH</h3>
+        <ol>
+          <li>Press <span class="kbd">Win</span> and search <em>"Edit the system environment variables"</em>, open it.</li>
+          <li>Click <strong>Environment Variables…</strong></li>
+          <li>Under <em>User variables</em> (or <em>System variables</em>), select <code>Path</code> → <strong>Edit</strong> → <strong>New</strong> and paste <code>C:\Program Files\Bytescript</code>.</li>
+          <li>OK every dialog, then open a <strong>new</strong> terminal.</li>
+        </ol></div>
+      <div class="step"><h3>Check it works</h3>
+<pre><code>bytescript --version
+bytescript -e "print(2 + 3)"</code></pre>
+        <p>You should see <code>Bytescript 1.1.0</code> and <code>5</code>.</p></div>
+    </div>
+
+    <h3>Option B — build from source</h3>
+    <div class="steps">
+      <div class="step"><h3>Install a C compiler</h3><p>Install <a href="https://www.msys2.org/">MSYS2</a>, open the <em>MSYS2 MinGW 64-bit</em> terminal and run:</p>
+<pre><code>pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-make</code></pre></div>
+      <div class="step"><h3>Get the source and build</h3>
+<pre><code>git clone https://github.com/gefrus112/Bytescript.git
+cd Bytescript
+mingw32-make</code></pre>
+        <p>This produces the <code>dist/</code> folder — the same layout as the release download.</p></div>
+      <div class="step"><h3>Run the tests (optional but wise)</h3>
+<pre><code>./tests/run_tests.sh</code></pre>
+        <p>All 24 checks should pass.</p></div>
+      <div class="step"><h3>Install it</h3><p>Move the <code>dist/</code> folder's contents to <code>C:\Program Files\Bytescript\</code> and add that folder to your <code>Path</code> (Option A, step 3).</p></div>
+    </div>
+  </div>
+
+  <!-- LINUX -->
+  <div class="tab-panel" id="os-linux">
+    <h2>Linux</h2>
+    <h3>Build from source (recommended — it's quick)</h3>
+    <div class="steps">
+      <div class="step"><h3>Install build tools</h3>
+<pre><code># Debian / Ubuntu
+sudo apt install build-essential git
+
+# Fedora
+sudo dnf install gcc make git
+
+# Arch
+sudo pacman -S base-devel git</code></pre></div>
+      <div class="step"><h3>Clone and build</h3>
+<pre><code>git clone https://github.com/gefrus112/Bytescript.git
+cd Bytescript
+make</code></pre>
+        <p>You now have <code>dist/bytescript</code>, <code>dist/libbytescript.so</code> and <code>dist/stdlib/</code> with the standard library modules (<code>.so</code> files).</p></div>
+      <div class="step"><h3>Run the tests</h3>
+<pre><code>make test</code></pre></div>
+      <div class="step"><h3>Put it on your PATH</h3>
+<pre><code>mkdir -p ~/.local/bytescript
+cp -r dist/* ~/.local/bytescript/
+echo 'export PATH="$HOME/.local/bytescript:$PATH"' >> ~/.bashrc
+# (use ~/.zshrc on zsh) then open a new terminal</code></pre>
+        <p>Keep the folder contents together — <code>bytescript</code> loads <code>libbytescript.so</code> and <code>stdlib/</code> from its own folder.</p></div>
+      <div class="step"><h3>Check it works</h3>
+<pre><code>bytescript --version
+bytescript -e "print(2 + 3)"</code></pre></div>
+    </div>
+    <h3>Or download a build</h3>
+    <p>Prebuilt Linux <code>dist/</code> folders are attached to <a href="download.html">releases</a> when available (and to every CI run under <em>Actions → Build &amp; test → Artifacts</em>). Unpack, then do steps 4–5 above.</p>
+  </div>
+
+  <!-- MACOS -->
+  <div class="tab-panel" id="os-macos">
+    <h2>macOS</h2>
+    <h3>Build from source</h3>
+    <div class="steps">
+      <div class="step"><h3>Install the compiler tools</h3>
+<pre><code>xcode-select --install</code></pre>
+        <p>(That gives you <code>gcc</code>/<code>clang</code>, <code>make</code> and <code>git</code>. A GCC from Homebrew — <code>brew install gcc</code> — also works; the Makefiles call <code>gcc</code>.)</p></div>
+      <div class="step"><h3>Clone and build</h3>
+<pre><code>git clone https://github.com/gefrus112/Bytescript.git
+cd Bytescript
+make</code></pre>
+        <p>This produces <code>dist/bytescript</code> with <code>libbytescript.dylib</code> and <code>.dylib</code> stdlib modules.</p></div>
+      <div class="step"><h3>Run the tests</h3>
+<pre><code>make test</code></pre></div>
+      <div class="step"><h3>Put it on your PATH</h3>
+<pre><code>mkdir -p ~/.local/bytescript
+cp -r dist/* ~/.local/bytescript/
+echo 'export PATH="$HOME/.local/bytescript:$PATH"' >> ~/.zshrc</code></pre>
+        <p>Open a new terminal afterwards. If Gatekeeper complains about an unsigned binary you downloaded, <em>Right-click → Open</em> once, or build from source (above) and it won't ask.</p></div>
+      <div class="step"><h3>Check it works</h3>
+<pre><code>bytescript --version
+bytescript -e "print(2 + 3)"</code></pre></div>
+    </div>
+  </div>
+</div>
+
+<h2>Your first program</h2>
+<div class="steps">
+  <div class="step"><h3>Create <code>hello.bs</code></h3>
+<pre><code class="lang-bytescript">-- hello.bs
+String who = "world"
+print("Hello, " .. who .. "!")
+
+for i = 1, 4 repeat
+    print(i)
+end</code></pre></div>
+  <div class="step"><h3>Run it</h3>
+<pre><code>bytescript hello.bs</code></pre>
+<pre class="output"><code>Hello, world!
+1
+2
+3</code></pre></div>
+  <div class="step"><h3>Explore</h3><p>Run the bundled exemples (<code>bytescript exemples/demo.bs</code>), play in the REPL (just type <code>bytescript</code>), then head to the <a href="docs.html">documentation</a>.</p></div>
+</div>
+
+<h2 id="editor">Editor setup (optional)</h2>
+<p>For VS Code, copy the <code>editors/vscode</code> folder from the repository into your extensions folder and restart VS Code:</p>
+<pre><code># Linux / macOS
+cp -r editors/vscode ~/.vscode/extensions/bytescript-1.1.0
+
+# Windows (PowerShell)
+Copy-Item -Recurse editors\vscode "$env:USERPROFILE\.vscode\extensions\bytescript-1.1.0"</code></pre>
+<p>You get syntax highlighting, <code>--</code> comments and <code>end</code>-aware indentation for <code>.bs</code> files.</p>
+
+<h2>Troubleshooting</h2>
+<table>
+<tr><th>Problem</th><th>Fix</th></tr>
+<tr><td><code>'bytescript' is not recognized</code> / <code>command not found</code></td><td>The folder isn't on your <code>PATH</code> yet, or the terminal predates the change. Redo the PATH step and open a <strong>new</strong> terminal.</td></tr>
+<tr><td>Windows: <em>bytescript.dll was not found</em> · Linux: <em>libbytescript.so: cannot open shared object file</em></td><td>You moved only the executable. Keep <code>bytescript.exe</code>/<code>bytescript</code> in the same folder as its library (the whole <code>dist/</code> contents stay together).</td></tr>
+<tr><td><code>Could not find file &lt;…_map.bs&gt;</code> or stdlib imports fail</td><td>Same cause: the <code>stdlib/</code> folder must sit next to the executable. Don't separate them.</td></tr>
+<tr><td><code>make: command not found</code></td><td>Install build tools (step 1 of your OS tab). On Windows use the <em>MinGW 64-bit</em> MSYS2 terminal and <code>mingw32-make</code>.</td></tr>
+<tr><td>Build errors mentioning <code>-march=native</code></td><td>Very old/virtual CPUs only: build with <code>make release</code> instead of plain <code>make</code>.</td></tr>
+<tr><td>macOS won't open a downloaded binary</td><td>Right-click → <em>Open</em> the first time, or build from source.</td></tr>
+<tr><td>Still stuck?</td><td><a href="https://github.com/gefrus112/Bytescript/issues">Open an issue</a> with your OS, the exact command and the full error message.</td></tr>
+</table>
+</main>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div><h4>Bytescript</h4><p>A small object-oriented language in C.<br>Free and open source (MIT).</p></div>
+    <div><h4>Project</h4><ul>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="install.html">Install guide</a></li>
+      <li><a href="download.html">Download</a></li>
+      <li><a href="contributors.html">Contributors</a></li>
+    </ul></div>
+    <div><h4>GitHub</h4><ul>
+      <li><a href="https://github.com/gefrus112/Bytescript">Repository</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/releases">Releases</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/issues">Issues</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/CHANGELOG.md">Changelog</a></li>
+    </ul></div>
+    <div><h4>Deep docs</h4><ul>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/syntax.md">Syntax (Markdown)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/stdlib.md">Standard library (Markdown)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/embedding.md">Embedding in C</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/bvm.md">The BVM</a></li>
+    </ul></div>
+  </div>
+</footer>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
