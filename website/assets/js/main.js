@@ -45,6 +45,13 @@
   document.querySelectorAll("code.lang-bytescript, code.language-bytescript").forEach(function (el) {
     el.innerHTML = highlight(el.textContent);
   });
+  /* hero IDE window: wrap editor lines for CSS line numbers (tokens never
+     contain newlines, so splitting highlighted HTML by \n is span-safe) */
+  document.querySelectorAll(".ide .editor code").forEach(function (el) {
+    el.innerHTML = el.innerHTML.split("\n").map(function (ln) {
+      return '<span class="ln">' + (ln || " ") + "</span>";
+    }).join("\n");
+  });
 
   /* ---------- copy buttons on <pre> ---------- */
   document.querySelectorAll("pre").forEach(function (pre) {
@@ -112,28 +119,118 @@
     }
   }
 
-  /* ---------- GitHub API: contributors (progressive enhancement) ---------- */
+  /* ---------- GitHub API: contributor profiles (progressive enhancement) ----------
+   * The HTML ships a baked snapshot (names, achievements, bios…) so the
+   * pages work offline and from file://. When online we refresh the
+   * numbers in place: followers/following/repos/gists, stars earned,
+   * top repositories, languages, follower avatar stacks and this repo's
+   * contribution counts/shares. Any failure (offline, rate limit) just
+   * leaves the snapshot untouched. */
+  var LANG_COLORS = { C: "#555555", "C++": "#f34b7d", Python: "#3572A5", JavaScript: "#f1e05a", TypeScript: "#3178c6", HTML: "#e34c26", CSS: "#663399", Shell: "#89e051", Rust: "#dea584", Go: "#00ADD8", Lua: "#000080" };
+  function escHtml(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function ghJson(url) { return fetch(url).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }); }
+  function langChip(name, extra) {
+    var c = LANG_COLORS[name] || "#8b8b7d";
+    return '<span><span class="lang-dot" style="background:' + c + '"></span>' + escHtml(name) + "</span>" + (extra || "");
+  }
+
+  var profileScopes = document.querySelectorAll("[data-login]");
+  var seenLogins = {};
+  profileScopes.forEach(function (scope) {
+    var login = scope.getAttribute("data-login");
+    if (!login || seenLogins[login]) return;
+    seenLogins[login] = true;
+    var api = "https://api.github.com/users/" + encodeURIComponent(login);
+    /* user record: followers / following / repos / gists / name / bio */
+    ghJson(api).then(function (u) {
+      document.querySelectorAll('[data-login="' + login + '"] [data-gh]').forEach(function (el) {
+        var key = el.getAttribute("data-gh");
+        if (u[key] !== null && u[key] !== undefined && u[key] !== "") el.textContent = u[key];
+      });
+      var note = document.getElementById("contributors-note");
+      if (note) note.textContent = "Live from the GitHub API — refreshed just now.";
+    }).catch(function () {});
+    /* repos: stars earned + top 3 + language mix */
+    if (scope.querySelector("[data-gh-repos], [data-gh-langs], [data-gh='stars']")) {
+      ghJson(api + "/repos?per_page=100").then(function (repos) {
+        if (!Array.isArray(repos)) return;
+        var own = repos.filter(function (r) { return !r.fork; });
+        var stars = own.reduce(function (s, r) { return s + (r.stargazers_count || 0); }, 0);
+        document.querySelectorAll('[data-login="' + login + '"] [data-gh="stars"]').forEach(function (el) { el.textContent = stars; });
+        var top = own.slice().sort(function (a, b) {
+          return (b.stargazers_count - a.stargazers_count) || String(b.pushed_at).localeCompare(String(a.pushed_at));
+        }).slice(0, 3);
+        document.querySelectorAll('[data-login="' + login + '"] [data-gh-repos]').forEach(function (box) {
+          if (!top.length) return;
+          box.innerHTML = top.map(function (r) {
+            return '<a class="repo-card" href="' + r.html_url + '"><span class="r-name">' + escHtml(r.name) + '</span>' +
+              '<span class="r-desc">' + escHtml(r.description || "No description yet") + '</span>' +
+              '<span class="repo-meta">' + (r.language ? langChip(r.language) : "") +
+              "<span>★ " + (r.stargazers_count || 0) + "</span><span>⑂ " + (r.forks_count || 0) + "</span></span></a>";
+          }).join("");
+        });
+        var counts = {};
+        own.forEach(function (r) { if (r.language) counts[r.language] = (counts[r.language] || 0) + 1; });
+        var langs = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; });
+        document.querySelectorAll('[data-login="' + login + '"] [data-gh-langs]').forEach(function (box) {
+          if (!langs.length) return;
+          box.innerHTML = langs.map(function (l) {
+            return '<span class="lang-chip"><span class="lang-dot" style="background:' + (LANG_COLORS[l] || "#8b8b7d") + '"></span>' + escHtml(l) + " ×" + counts[l] + "</span>";
+          }).join("");
+        });
+      }).catch(function () {});
+    }
+    /* follower avatar stack */
+    if (scope.querySelector("[data-gh-followers]")) {
+      ghJson(api + "/followers?per_page=12").then(function (fol) {
+        if (!Array.isArray(fol)) return;
+        document.querySelectorAll('[data-login="' + login + '"] [data-gh-followers]').forEach(function (box) {
+          if (!fol.length) return;
+          box.innerHTML = fol.slice(0, 8).map(function (f) {
+            return '<a href="' + f.html_url + '" title="@' + escHtml(f.login) + '"><img src="' + f.avatar_url + '" alt="@' + escHtml(f.login) + '"></a>';
+          }).join("") + (fol.length > 8 ? '<span class="more">+' + (fol.length - 8) + "</span>" : "");
+        });
+        if (fol.length) document.querySelectorAll('[data-login="' + login + '"] [data-gh-followers-empty]').forEach(function (el) { el.textContent = "Followed by"; });
+      }).catch(function () {});
+    }
+  });
+
+  /* this repo's contributor list: counts, shares, meters, landing total */
   var contribBox = document.getElementById("contributors-live");
-  if (contribBox) {
-    fetch("https://api.github.com/repos/" + REPO + "/contributors")
-      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+  if (contribBox || document.querySelector("[data-contrib-for], [data-gh-total-contrib]")) {
+    ghJson("https://api.github.com/repos/" + REPO + "/contributors")
       .then(function (list) {
         if (!Array.isArray(list) || !list.length) return;
-        contribBox.innerHTML = "";
+        var total = list.reduce(function (s, c) { return s + (c.contributions || 0); }, 0);
+        document.querySelectorAll("[data-gh-total-contrib]").forEach(function (el) {
+          el.setAttribute("data-count", total); el.textContent = total;
+        });
         list.forEach(function (c) {
-          var card = document.createElement("div");
-          card.className = "card person";
-          card.innerHTML =
-            '<img class="avatar" src="' + c.avatar_url + '" alt="' + c.login + '">' +
-            "<h3>" + c.login + "</h3>" +
-            '<p class="muted">' + c.contributions + " contributions</p>" +
-            '<p><a href="' + c.html_url + '">GitHub profile</a></p>';
-          contribBox.appendChild(card);
+          var pct = total ? (c.contributions / total * 100) : 0;
+          var pctTxt = (Math.round(pct * 10) / 10) + "%";
+          document.querySelectorAll('[data-contrib-for="' + c.login + '"], [data-login="' + c.login + '"] [data-gh-contrib]').forEach(function (el) { el.textContent = c.contributions; });
+          document.querySelectorAll('[data-share-for="' + c.login + '"]').forEach(function (el) { el.style.width = pct + "%"; el.style.setProperty("--w", pct + "%"); });
+          document.querySelectorAll('[data-sharepct-for="' + c.login + '"]').forEach(function (el) { el.textContent = pctTxt; });
+          /* brand-new contributor not baked into the page yet? append a starter card */
+          if (contribBox && !contribBox.querySelector('[data-login="' + c.login + '"]')) {
+            var card = document.createElement("article");
+            card.className = "person-card"; card.setAttribute("data-login", c.login);
+            card.innerHTML =
+              '<div class="person-head"><img class="avatar xl" src="' + c.avatar_url + '" alt="' + escHtml(c.login) + ' avatar">' +
+              '<div class="person-id"><h3><a href="' + c.html_url + '">' + escHtml(c.login) + '</a></h3><p class="login">@' + escHtml(c.login) + '</p>' +
+              '<span class="role-chip">Contributor</span></div>' +
+              '<div class="person-actions"><a class="btn small primary" href="' + c.html_url + '">GitHub profile ↗</a></div></div>' +
+              '<div class="contrib-meter"><div class="contrib-label"><span><b>' + c.contributions + '</b> contributions to Bytescript</span><span>' + pctTxt + '</span></div>' +
+              '<div class="meter"><i style="width:' + pct + '%"></i></div></div>' +
+              '<p class="bio">🎉 New face — this contributor joined after the page snapshot was taken. Welcome aboard!</p>';
+            contribBox.appendChild(card);
+            card.classList.add("reveal", "in");
+          }
         });
         var note = document.getElementById("contributors-note");
         if (note) note.textContent = "Live from the GitHub API — refreshed just now.";
       })
-      .catch(function () { /* baked-in fallback cards stay visible */ });
+      .catch(function () { /* baked-in snapshot stays visible */ });
   }
 
   /* ---------- GitHub API: latest release (progressive enhancement) ---------- */
@@ -174,7 +271,7 @@
   onScroll();
 
   /* reveal-on-scroll (elements are visible by default without JS) */
-  var revealEls = document.querySelectorAll(".card, .step, .stat, .pipe-step, .faq details, .cta-panel, section.doc > h2, main.wrap > h2");
+  var revealEls = document.querySelectorAll(".card, .person-card, .step, .stat, .pipe-step, .faq details, .cta-panel, table.leaderboard, section.doc > h2, main.wrap > h2");
   revealEls.forEach(function (el, i) {
     el.classList.add("reveal");
     el.style.setProperty("--d", ((i % 4) * 0.07) + "s");
@@ -209,16 +306,14 @@
     counters.forEach(function (el) { countObs.observe(el); });
   } else counters.forEach(animateCount);
 
-  /* card spotlight + gentle tilt */
+  /* card spotlight (flat terminal theme — glow follows the pointer, no tilt) */
   if (finePointer && !reducedMotion) {
-    document.querySelectorAll(".card").forEach(function (card) {
+    document.querySelectorAll(".card, .person-card").forEach(function (card) {
       card.addEventListener("pointermove", function (ev) {
         var r = card.getBoundingClientRect();
-        var x = (ev.clientX - r.left) / r.width, y = (ev.clientY - r.top) / r.height;
-        card.style.setProperty("--mx", (x * 100) + "%"); card.style.setProperty("--my", (y * 100) + "%");
-        card.style.transform = "translateY(-6px) perspective(900px) rotateX(" + ((0.5 - y) * 3.2) + "deg) rotateY(" + ((x - 0.5) * 3.2) + "deg)";
+        card.style.setProperty("--mx", ((ev.clientX - r.left) / r.width * 100) + "%");
+        card.style.setProperty("--my", ((ev.clientY - r.top) / r.height * 100) + "%");
       });
-      card.addEventListener("pointerleave", function () { card.style.transform = ""; });
     });
   }
 
@@ -226,7 +321,7 @@
   var rain = document.querySelector(".byte-rain");
   if (rain && rain.getContext && !reducedMotion) {
     var ctx = rain.getContext("2d"), cols = [], glyphs = "01<>/{}=+*";
-    var colors = ["#8b5cf6", "#22d3ee", "#fb923c", "#f472b6", "#facc15"];
+    var colors = ["#ffdd00", "#8a8a7a", "#3f3f38", "#fff3a0", "#5d5d54"];
     function sizeRain() {
       var r = rain.parentElement.getBoundingClientRect();
       rain.width = Math.max(1, Math.floor(r.width)); rain.height = Math.max(1, Math.floor(r.height));

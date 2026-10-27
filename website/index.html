@@ -7,7 +7,7 @@
 <meta name="description" content="Bytescript is an object-oriented, embeddable programming language with a bytecode VM, written in C. Now on Windows, Linux and macOS.">
 <link rel="icon" href="favicon.ico">
 <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
-<link rel="stylesheet" href="assets/css/style.css?v=2">
+<link rel="stylesheet" href="assets/css/style.css?v=3">
 </head>
 <body>
 <header class="site">
@@ -31,44 +31,65 @@
   <div class="hero-inner">
     <div class="hero-copy">
       <img class="hero-logo" src="assets/logo.svg" alt="Bytescript logo">
-      <span class="eyebrow">v1.1 · now on Windows, Linux &amp; macOS</span>
-      <h1>Code that<br><span class="grad-text">runs everywhere.</span></h1>
-      <p class="tag"><strong>Bytescript</strong> is a small, object-oriented, embeddable programming language with its own bytecode VM — written in C, friendly to learn, and fun to hack on.</p>
+      <span class="eyebrow">v1.1.0 — now on Windows · Linux · macOS</span>
+      <h1>Code in bytes.<br><span class="grad-text">Ship everywhere.</span></h1>
+      <p class="tag"><strong>Bytescript</strong> is a small, object-oriented programming language with its own bytecode VM — written in C, embeddable anywhere, friendly to learn, fun to hack on.</p>
       <div class="cta">
-        <a class="btn primary" href="download.html">⬇&nbsp; Download Bytescript</a>
+        <a class="btn primary" href="download.html">Download Bytescript</a>
         <a class="btn" href="#play">▶ See it run</a>
-        <a class="btn" href="docs.html">Read the docs</a>
+        <a class="btn" href="https://github.com/gefrus112/Bytescript">★ GitHub</a>
       </div>
       <div class="badges">
-        <span class="badge">version 1.1.0</span>
+        <span class="badge">MIT licence</span>
         <span class="badge">bytecode VM</span>
         <span class="badge">written in C</span>
-        <span class="badge">MIT licence</span>
+        <span class="badge">zero dependencies</span>
       </div>
+      <p class="cli-line"><b>$</b> bytescript --version → Bytescript 1.1.0<span class="cursor" aria-hidden="true"></span></p>
     </div>
 
-    <div class="terminal" aria-label="Animated Bytescript terminal demonstration">
-      <div class="terminal-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="terminal-title">bytescript — live demo</span></div>
+    <div class="ide" aria-label="Bytescript editor and terminal demonstration">
+      <div class="ide-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <div class="ide-tabs"><span class="ide-tab active">fib.bs</span><span class="ide-tab">demo.bs</span><span class="ide-tab">hello.bs</span></div>
+      </div>
+      <div class="editor"><pre><code class="lang-bytescript">func Number fib(Number n)
+    if n &lt;= 1 then return n end
+
+    Number a = 0
+    Number b = 1
+
+    for i = 1, n repeat
+        Number tmp = a + b
+        a = b
+        b = tmp
+    end
+
+    return b
+end
+
+print(fib(10))  -- 55</code></pre></div>
+      <div class="terminal-label">Terminal — live demo</div>
       <div class="terminal-body" id="typed-terminal">
         <div><span class="term-prompt">$ </span><span class="term-cmd">bytescript hello.bs</span></div>
         <div class="term-out">Hello, World!</div>
         <div class="term-out">Welcome to Bytescript</div>
         <div class="term-dim">Tip: run <strong>bytescript</strong> with no file for the REPL.</div>
       </div>
+      <div class="ide-status"><span class="ok">● VM ready</span><span>Bytescript 1.1.0</span><span>register VM</span><span>NaN-boxed</span></div>
     </div>
   </div>
 </section>
 
 <div class="stats" aria-label="Bytescript at a glance">
+  <div class="stat"><b data-count="143" data-gh-total-contrib>0</b><span>contributions on GitHub</span></div>
+  <div class="stat"><b data-count="24" data-suffix="/24">0</b><span>tests green in CI</span></div>
   <div class="stat"><b data-count="3">0</b><span>operating systems</span></div>
   <div class="stat"><b data-count="7">0</b><span>stdlib modules</span></div>
-  <div class="stat"><b data-count="24">0</b><span>automated tests</span></div>
-  <div class="stat"><b data-count="64" data-suffix="-bit">0</b><span>NaN-boxed values</span></div>
 </div>
 
 <div class="ticker" aria-hidden="true"><div class="ticker-track">
-  <span>Number <i>·</i> String <i>·</i> Table <i>·</i> Function <i>·</i> class <i>·</i> func <i>·</i> import <i>·</i> Math <i>·</i> OS <i>·</i> Time <i>·</i> Random <i>·</i> Json <i>·</i> Base64 <i>·</i> Debug <i>·</i> bytecode VM <i>·</i> REPL <i>·</i>&nbsp;</span>
-  <span>Number <i>·</i> String <i>·</i> Table <i>·</i> Function <i>·</i> class <i>·</i> func <i>·</i> import <i>·</i> Math <i>·</i> OS <i>·</i> Time <i>·</i> Random <i>·</i> Json <i>·</i> Base64 <i>·</i> Debug <i>·</i> bytecode VM <i>·</i> REPL <i>·</i>&nbsp;</span>
+  <span>Number <i>//</i> String <i>//</i> Table <i>//</i> Function <i>//</i> class <i>//</i> func <i>//</i> import <i>//</i> Math <i>//</i> OS <i>//</i> Time <i>//</i> Random <i>//</i> Json <i>//</i> Base64 <i>//</i> Debug <i>//</i> bytecode VM <i>//</i> REPL <i>//</i>&nbsp;</span>
+  <span>Number <i>//</i> String <i>//</i> Table <i>//</i> Function <i>//</i> class <i>//</i> func <i>//</i> import <i>//</i> Math <i>//</i> OS <i>//</i> Time <i>//</i> Random <i>//</i> Json <i>//</i> Base64 <i>//</i> Debug <i>//</i> bytecode VM <i>//</i> REPL <i>//</i>&nbsp;</span>
 </div></div>
 
 <main class="wrap">
@@ -161,8 +182,8 @@ FizzBuzz</code></pre>
     </div>
   </div>
 
-  <h2>What you get</h2>
-  <div class="grid">
+  <div class="section-head"><span class="kicker">Features</span><h2>What you get</h2></div>
+  <div class="grid counted">
     <div class="card"><div class="ico">🧩</div><h3>Object-oriented</h3><p>Classes, constructors (<code>__new</code>), methods, static methods and operator overloading through dunder methods like <code>__concat</code>.</p></div>
     <div class="card"><div class="ico">🏷️</div><h3>Optional types</h3><p>Annotate variables, arguments and return values (<code>Number</code>, <code>String</code>, <code>Table</code>, your own classes…) or use <code>var</code> and let it flow. Types are checked before your code runs.</p></div>
     <div class="card"><div class="ico">🗂️</div><h3>One mighty Table</h3><p>Tables are both arrays and hash maps, with slicing, filling, copying, iteration and more built in.</p></div>
@@ -190,9 +211,8 @@ bytescript                      -- interactive REPL</code></pre>
     <p>Then explore the <a href="docs.html">documentation</a> and the bundled <code>exemples/</code> programs.</p></div>
   </div>
 
-  <h2>Standard library</h2>
-  <p>Batteries included — built-ins are always available, library modules are imported by name:</p>
-  <div class="grid">
+  <div class="section-head"><span class="kicker">Batteries included</span><h2>Standard library</h2><p class="muted">Built-ins are always available, library modules are imported by name:</p></div>
+  <div class="grid counted">
     <div class="card"><h3>Built-ins</h3><p><code>print</code>, <code>input</code>, <code>exec</code>… plus rich <code>Table</code>, <code>String</code>, <code>IO</code>/<code>File</code> and <code>Error</code> classes.</p></div>
     <div class="card"><h3>Math</h3><p><code>sqrt</code>, <code>sin</code>/<code>cos</code>/<code>tan</code>, <code>floor</code>, <code>clamp</code>, constants <code>pi</code>, <code>e</code>, <code>inf</code> and friends.</p></div>
     <div class="card"><h3>OS &amp; Time</h3><p>Environment, paths, working directory, running commands; wall clock, high-precision clock and <code>sleep</code>.</p></div>
@@ -228,6 +248,32 @@ bytescript                      -- interactive REPL</code></pre>
     <div class="card dl-card"><div class="os">🐧</div><h3>Linux</h3><p><code>libbytescript.so</code>, rpath-ready binaries and a two-minute <code>make</code> build.</p><p><a class="btn small primary" href="install.html">Install on Linux</a></p></div>
     <div class="card dl-card"><div class="os">🍎</div><h3>macOS</h3><p>Apple Silicon and Intel friendly, with <code>.dylib</code> modules and CI on every change.</p><p><a class="btn small primary" href="install.html">Install on macOS</a></p></div>
   </div>
+
+  <div class="section-head"><span class="kicker">Open source</span><h2>Built in the open</h2><p class="muted">Bytescript is made by real people on GitHub — every commit, issue and achievement is public. Numbers refresh live from the GitHub API.</p></div>
+  <div class="grid" id="mini-people">
+    <div class="card mini-person" data-login="ayteam8">
+      <img class="avatar" src="https://avatars.githubusercontent.com/u/146124313?v=4" alt="ayteam8" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="avatar-fallback">a</div>
+      <div><h3>ayteam</h3>
+      <p class="mp-meta">@ayteam8 · Creator &amp; lead developer</p>
+      <p class="mp-meta"><b data-gh-contrib>138</b> contributions · <b data-gh="followers">2</b> followers · <b data-gh="public_repos">1</b> repo</p></div>
+    </div>
+    <div class="card mini-person" data-login="Guille-ux">
+      <img class="avatar" src="https://avatars.githubusercontent.com/u/104579306?v=4" alt="Guille-ux" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="avatar-fallback">G</div>
+      <div><h3>Guillermo leira temes</h3>
+      <p class="mp-meta">@Guille-ux · Contributor · 📍 Spain</p>
+      <p class="mp-meta"><b data-gh-contrib>4</b> contributions · <b data-gh="followers">6</b> followers · <b data-gh="public_repos">33</b> repos</p></div>
+    </div>
+    <div class="card mini-person" data-login="gefrus112">
+      <img class="avatar" src="https://github.com/gefrus112.png?size=96" alt="gefrus112" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="avatar-fallback">g</div>
+      <div><h3>highenough</h3>
+      <p class="mp-meta">@gefrus112 · Maintainer &amp; repo owner</p>
+      <p class="mp-meta"><b data-gh-contrib>1</b> contribution · <b data-gh="followers">0</b> followers · <b data-gh="public_repos">13</b> repos</p></div>
+    </div>
+  </div>
+  <p><a class="btn small" href="contributors.html">Full profiles, achievements &amp; repos →</a></p>
 
   <div class="section-head"><span class="kicker">FAQ</span><h2>Quick answers</h2></div>
   <div class="faq">
@@ -272,6 +318,6 @@ bytescript                      -- interactive REPL</code></pre>
     </ul></div>
   </div>
 </footer>
-<script src="assets/js/main.js?v=2"></script>
+<script src="assets/js/main.js?v=3"></script>
 </body>
 </html>
