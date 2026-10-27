@@ -28,38 +28,44 @@
 
 <main class="wrap">
 <h1>Download Bytescript</h1>
-<p>Current version: <strong>1.1.0</strong> — first cross-platform release (Windows, Linux, macOS), new CLI with REPL, and a pile of crash fixes. <a href="https://github.com/gefrus112/Bytescript/blob/main/CHANGELOG.md">Release notes →</a></p>
+<p>Current version: <strong>1.1.0</strong> — first cross-platform release (Windows, Linux, macOS), new CLI with REPL, and a pile of crash fixes. <a href="https://github.com/gefrus112/Bytescript/releases/tag/v1.1.0">v1.1.0 on GitHub →</a> · <a href="https://github.com/gefrus112/Bytescript/blob/main/CHANGELOG.md">Changelog →</a></p>
 
 <div class="card">
-  <h3 style="margin-top:0">📦 Latest release from GitHub</h3>
+  <h3 style="margin-top:0">📦 Bytescript v1.1.0 — GitHub Release</h3>
   <div id="latest-release">
-    <p>Prebuilt packages are published on the GitHub releases page:</p>
-    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/latest">⬇&nbsp; Latest release on GitHub</a>
+    <p>Download a ready-to-run package for your operating system:</p>
+    <ul>
+      <li><a href="https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/bytescript-v1.1.0-windows-x86_64.zip">Windows x86_64 (.zip)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/bytescript-v1.1.0-linux-x86_64.tar.gz">Linux x86_64 (.tar.gz)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/bytescript-v1.1.0-macos-arm64.tar.gz">macOS Apple Silicon (.tar.gz)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/SHA256SUMS.txt">SHA-256 checksums</a></li>
+    </ul>
+    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/tag/v1.1.0">⬇&nbsp; Open v1.1.0 release</a>
        <a class="btn small" href="https://github.com/gefrus112/Bytescript/releases">All releases</a></p>
-    <p class="muted">No release for your platform yet? Every push also produces ready-to-use builds under <a href="https://github.com/gefrus112/Bytescript/actions">Actions → Build &amp; test → Artifacts</a> (<code>bytescript-windows-latest</code>, <code>bytescript-ubuntu-latest</code>, <code>bytescript-macos-latest</code>) — or build from source below, it takes two minutes.</p>
+    <p class="muted">Intel Mac and other architectures can build from source below in about two minutes. Development builds from every push are also under <a href="https://github.com/gefrus112/Bytescript/actions">Actions → Build &amp; test → Artifacts</a>.</p>
   </div>
 </div>
 
 <div class="grid">
   <div class="card dl-card"><div class="os">🪟</div><h3>Windows</h3>
-    <p><code>bytescript.exe</code> + <code>bytescript.dll</code> + stdlib</p>
-    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/latest">Download build</a></p>
+    <p>Windows 10+ · x86_64<br><code>bytescript.exe</code> + DLL + stdlib</p>
+    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/bytescript-v1.1.0-windows-x86_64.zip">Download .zip</a></p>
     <p><a href="install.html">Windows install steps →</a></p></div>
 
   <div class="card dl-card"><div class="os">🐧</div><h3>Linux</h3>
-    <p><code>bytescript</code> + <code>libbytescript.so</code> + stdlib</p>
-    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/latest">Download build</a></p>
+    <p>glibc · x86_64<br><code>bytescript</code> + <code>.so</code> + stdlib</p>
+    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/bytescript-v1.1.0-linux-x86_64.tar.gz">Download .tar.gz</a></p>
     <p><a href="install.html">Linux install steps →</a></p></div>
 
   <div class="card dl-card"><div class="os">🍎</div><h3>macOS</h3>
-    <p><code>bytescript</code> + <code>libbytescript.dylib</code> + stdlib</p>
-    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/latest">Download build</a></p>
+    <p>macOS 11+ · Apple Silicon<br><code>bytescript</code> + <code>.dylib</code> + stdlib</p>
+    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/bytescript-v1.1.0-macos-arm64.tar.gz">Download .tar.gz</a></p>
     <p><a href="install.html">macOS install steps →</a></p></div>
 
   <div class="card dl-card"><div class="os">💾</div><h3>Source code</h3>
-    <p>Build it yourself — GCC + <code>make</code>, nothing else needed.</p>
-    <p><a class="btn primary small" href="https://codeload.github.com/gefrus112/Bytescript/zip/refs/heads/main">.zip</a>
-       <a class="btn small" href="https://codeload.github.com/gefrus112/Bytescript/tar.gz/refs/heads/main">.tar.gz</a></p>
+    <p>Tagged v1.1.0 source — GCC + <code>make</code>, nothing else needed.</p>
+    <p><a class="btn primary small" href="https://codeload.github.com/gefrus112/Bytescript/zip/refs/tags/v1.1.0">Source .zip</a>
+       <a class="btn small" href="https://codeload.github.com/gefrus112/Bytescript/tar.gz/refs/tags/v1.1.0">Source .tar.gz</a></p>
     <p class="muted">…or clone it:</p>
 <pre><code>git clone https://github.com/gefrus112/Bytescript.git</code></pre></div>
 </div>
@@ -79,14 +85,15 @@ make test     # 24 checks, all should pass
 <tr><td><code>bytescript.dll</code> + <code>.lib</code> / <code>libbytescript.so</code> / <code>.dylib</code></td><td>The language as a library, for embedding in C programs.</td></tr>
 <tr><td><code>bytescript.h</code>, <code>bytev.h</code>, <code>platform.h</code></td><td>Public C API headers.</td></tr>
 <tr><td><code>stdlib/</code></td><td>Standard library: Math, OS, Time, Random, Json, Base64, Debug + built-in module maps. <strong>Must stay next to the executable.</strong></td></tr>
-<tr><td>Source only: <code>exemples/</code>, <code>tests/</code>, <code>docs/</code>, <code>website/</code>, <code>editors/</code></td><td>Example programs, the test suite, documentation sources, this website, VS Code extension.</td></tr>
+<tr><td><code>exemples/</code>, <code>README.md</code>, <code>CHANGELOG.md</code>, <code>LICENSE</code></td><td>Runnable sample programs and project information included in every release archive.</td></tr>
+<tr><td>Source only: <code>tests/</code>, <code>docs/</code>, <code>website/</code>, <code>editors/</code></td><td>The test suite, documentation sources, this website, VS Code extension.</td></tr>
 </table>
 
 <h2>System requirements</h2>
 <table>
 <tr><th></th><th>Requirement</th></tr>
-<tr><td>OS</td><td>Windows 10+ (64-bit), any modern Linux (glibc, x86-64 — ARM builds from source), macOS 11+</td></tr>
-<tr><td>To run</td><td>Nothing extra — the interpreter is self-contained.</td></tr>
+<tr><td>OS</td><td>Windows 10+ (x86_64), Linux with glibc (x86_64; built on Ubuntu 22.04), macOS 11+ (Apple Silicon prebuilt; Intel builds from source)</td></tr>
+<tr><td>To run</td><td>Nothing extra — extract the archive and keep its files together. Check <code>SHA256SUMS.txt</code> if you want to verify your download.</td></tr>
 <tr><td>To build</td><td>GCC (MinGW/MSYS2 on Windows) + GNU make. No other dependencies.</td></tr>
 <tr><td>Size</td><td>A few hundred KB for the binaries.</td></tr>
 </table>

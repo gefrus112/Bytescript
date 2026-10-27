@@ -1,0 +1,192 @@
+name: Release
+
+# Publish a GitHub Release whenever a version tag such as v1.1.0 is pushed.
+# The workflow can also be run manually, but only from an existing version
+# tag. See RELEASING.md for the complete maintainer checklist.
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      draft:
+        description: "Create the GitHub release as a draft"
+        required: false
+        default: false
+        type: boolean
+      prerelease:
+        description: "Mark the GitHub release as a prerelease"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build ${{ matrix.label }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: Windows x86_64
+            runner: windows-latest
+            platform: windows
+          - label: Linux x86_64
+            runner: ubuntu-22.04
+            platform: linux
+          - label: macOS
+            runner: macos-latest
+            platform: macos
+
+    steps:
+      - name: Require a version tag
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF_TYPE" != "tag" ]]; then
+            echo "Releases must run from a tag such as v1.1.0." >&2
+            exit 1
+          fi
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid release tag: $GITHUB_REF_NAME" >&2
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Set up MinGW (Windows)
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-make
+
+      - name: Build and test (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: |
+          mingw32-make release
+          ./tests/run_tests.sh
+
+          # The test environment has MinGW on PATH; a downloaded release may
+          # not. Copy any MinGW runtime DLLs the shipped binaries actually
+          # import so the archive is self-contained on a clean Windows PC.
+          for binary in dist/bytescript.exe dist/bytescript.dll dist/stdlib/*.dll; do
+            ldd "$binary" || true
+          done | awk '/mingw64\/bin\// { print $3 }' | sort -u | while IFS= read -r dll; do
+            if [[ -n "$dll" && -f "$dll" ]]; then
+              cp -n "$dll" dist/
+            fi
+          done
+
+      - name: Build and test (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          make release
+          ./tests/run_tests.sh
+
+      - name: Build and test (macOS)
+        if: runner.os == 'macOS'
+        env:
+          MACOSX_DEPLOYMENT_TARGET: "11.0"
+        run: |
+          make release
+          ./tests/run_tests.sh
+
+      - name: Package and smoke-test archive
+        shell: bash
+        run: |
+          python scripts/package_release.py \
+            --version "$GITHUB_REF_NAME" \
+            --platform "${{ matrix.platform }}" \
+            --commit "$GITHUB_SHA" \
+            --smoke-test
+
+      - name: Upload release package
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: release-assets/*
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Download all release packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: Verify packages and create checksums
+        shell: bash
+        run: |
+          shopt -s nullglob
+          assets=(release-assets/bytescript-*.zip release-assets/bytescript-*.tar.gz)
+          if [[ ${#assets[@]} -ne 3 ]]; then
+            echo "Expected exactly three OS packages, found ${#assets[@]}:" >&2
+            printf '%s\n' "${assets[@]}" >&2
+            exit 1
+          fi
+          (
+            cd release-assets
+            sha256sum bytescript-*.zip bytescript-*.tar.gz > SHA256SUMS.txt
+            cat SHA256SUMS.txt
+          )
+
+      - name: Generate release notes
+        run: |
+          python scripts/extract_release_notes.py \
+            --version "$GITHUB_REF_NAME" \
+            --assets-dir release-assets \
+            --output release-notes.md
+
+      - name: Create or update GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_DRAFT: ${{ inputs.draft }}
+          INPUT_PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          tag="$GITHUB_REF_NAME"
+          title="Bytescript $tag"
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" release-assets/* --clobber
+            gh release edit "$tag" --title "$title" --notes-file release-notes.md
+          else
+            create_args=(--title "$title" --notes-file release-notes.md --verify-tag)
+            if [[ "$INPUT_DRAFT" == "true" ]]; then
+              create_args+=(--draft)
+            fi
+            if [[ "$INPUT_PRERELEASE" == "true" || "$tag" == *-* ]]; then
+              create_args+=(--prerelease)
+            fi
+            gh release create "$tag" release-assets/* "${create_args[@]}"
+          fi

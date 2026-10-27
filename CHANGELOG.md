@@ -23,6 +23,8 @@
   building on Windows, Ubuntu and macOS.
 - VS Code syntax highlighting for `.bs` files (`editors/vscode/`).
 - New runnable exemples: `hello.bs`, `fizzbuzz.bs`, `demo.bs`.
+- **Prebuilt GitHub Release packages** for Windows, Linux and macOS, with
+  bundled exemples and a `SHA256SUMS.txt` checksum file.
 
 ### Bug fixes
 

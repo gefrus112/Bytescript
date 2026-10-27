@@ -3,5 +3,8 @@ bytescript.exe
 bytescript.zip
 build/
 dist/
+release-assets/
+release-notes.md
+__pycache__/
 *.o
 *.d
