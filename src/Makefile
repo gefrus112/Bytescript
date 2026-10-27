@@ -32,7 +32,7 @@ else
 	LDLIBS := -lm -ldl
 endif
 
-SRC := $(patsubst ./%, %, $(shell find . -name '*.c'))
+SRC := $(wildcard *.c */*.c */*/*.c)
 MAIN_SRC := $(wildcard *.c)
 LIB_SRC := $(filter-out $(MAIN_SRC), $(SRC))
 MAPS_SRC := $(wildcard Globals/maps/*.bs)

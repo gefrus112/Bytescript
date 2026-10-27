@@ -66,7 +66,7 @@ else
 endif
 
 ../dist/stdlib/%_map.bs: | ../dist/stdlib
-	cp $(shell find . -name $*_map.bs) $@
+	cp $(wildcard */$*_map.bs) $@
 
 # One explicit rule per source file (see src/Makefile).
 define OBJ_RULE

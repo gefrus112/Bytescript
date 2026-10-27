@@ -412,8 +412,10 @@ int compile_if_statement(Node* node, Scope* context) {
     NodeArray stments = node->node.IfNode.statements;
     size_t next = 0;
 
-    struct { size_t len; size_t ptr[cases.len]; } ends;
-    ends.len = 0;
+    /* (Cannot be a struct containing `size_t ptr[cases.len]`: a VLA inside
+     * a struct is a GNU extension that Clang rejects outright.) */
+    size_t ends_ptr[cases.len ? cases.len : 1];
+    size_t ends_len = 0;
 
     for (int i = 0; i < cases.len; i++) {
         int condition = compile(cases.nodes[i], context);
@@ -438,7 +440,7 @@ int compile_if_statement(Node* node, Scope* context) {
         emit(0x00, context);
         emit(0x00, context);
         emit(0x00, context);
-        ends.ptr[ends.len++] = CURRENT_INSTR;
+        ends_ptr[ends_len++] = CURRENT_INSTR;
 
         patch_single_jfalse_label(context->bytecode.bytes, next, get_jump_lenght(next, context));
     }
@@ -450,7 +452,7 @@ int compile_if_statement(Node* node, Scope* context) {
             
         } else { context->bytecode.len -= 4; patch_single_jfalse_label(context->bytecode.bytes, next, get_jump_lenght(next, context)); }
 
-        patch_array_jump_label(context->bytecode.bytes, (struct ArrayLabel){ .len = ends.len, .ptr = ends.ptr }, CURRENT_INSTR);
+        patch_array_jump_label(context->bytecode.bytes, (struct ArrayLabel){ .len = ends_len, .ptr = ends_ptr }, CURRENT_INSTR);
     }
 
     return 0;
