@@ -139,6 +139,21 @@ Token* make_tokens(char* text) {
             case '-': {
                 if (next_match(text, '-')) {
                     while (*++text && *text != '\n');
+
+                    /* A comment ends the line, so emit the newline token.
+                     * Previously this fell through without emitting
+                     * anything, but the code below still advanced the token
+                     * pointer - leaving an uninitialized garbage token in
+                     * the stream (harmless only where malloc happened to
+                     * return zeroed pages; on Windows it corrupted parses
+                     * of any file containing a comment). */
+                    if (!*text) {
+                        emit_token(tp, TT_EOF, NIL);
+                        ++tok_len;
+                        goto end;
+                    }
+
+                    emit_token(tp, TT_NEWLINE, NIL);
                     break;
                 }
 
