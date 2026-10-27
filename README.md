@@ -47,11 +47,18 @@ but "GitHub Actions" is the recommended setting.)
 
 ### Download a release
 
-1. Download the latest build from the
-   [GitHub releases](https://github.com/gefrus112/Bytescript/releases)
-   (or the *Actions → Build & test* artifacts).
-2. Unzip it somewhere permanent, e.g. `C:\Program Files\Bytescript`
-   (Windows) or `~/.local/bytescript` (Linux/macOS).
+**Latest release: [Bytescript v1.1.0](https://github.com/gefrus112/Bytescript/releases/tag/v1.1.0)**
+
+- [Windows x86_64 (.zip)](https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/bytescript-v1.1.0-windows-x86_64.zip)
+- [Linux x86_64 (.tar.gz)](https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/bytescript-v1.1.0-linux-x86_64.tar.gz)
+- [macOS Apple Silicon (.tar.gz)](https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/bytescript-v1.1.0-macos-arm64.tar.gz)
+- [SHA-256 checksums](https://github.com/gefrus112/Bytescript/releases/download/v1.1.0/SHA256SUMS.txt)
+- [All releases](https://github.com/gefrus112/Bytescript/releases)
+
+1. Download the package for your operating system.
+2. Extract it somewhere permanent, e.g. `C:\Program Files\Bytescript`
+   (Windows) or `~/.local/bytescript` (Linux/macOS). Keep the executable,
+   shared library and `stdlib/` folder together.
 3. Add that folder to your `PATH`.
 4. Check it works: `bytescript --version`
 
@@ -102,4 +109,5 @@ for `.bs` files — see its README for install steps.
 
 Contributions are welcome! Build with `make`, run `make test`, and open a
 pull request. New language behaviour should come with a test in `tests/`
-(a `.bs` file plus its `.expected` output).
+(a `.bs` file plus its `.expected` output). Maintainers can follow
+[RELEASING.md](RELEASING.md) to publish tagged GitHub Releases.
