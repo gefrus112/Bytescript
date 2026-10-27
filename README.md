@@ -32,8 +32,16 @@ print(clicks:get())   -- 1
 The `website/` folder contains the project homepage with full
 documentation, an install guide, downloads and the contributor list.
 Open `website/index.html` in a browser, or serve it with
-`python3 -m http.server -d website`. It is ready to deploy on
-GitHub Pages (`.github/workflows/pages.yml`).
+`python3 -m http.server -d website`.
+
+**Publishing on GitHub Pages:** go to the repository's
+*Settings → Pages → Build and deployment* and set **Source: GitHub Actions**
+— the workflow in `.github/workflows/pages.yml` then deploys `website/`
+on every push to `main`. (If the source is left on "Deploy from a branch",
+GitHub serves the repository root instead; the root `index.html` is a
+fallback that redirects visitors into `website/`, so the address
+<https://gefrus112.github.io/Bytescript/> still reaches the site —
+but "GitHub Actions" is the recommended setting.)
 
 ## Installation
 

@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contributors — Bytescript</title>
-<meta name="description" content="The people who built Bytescript, and how you can join them.">
+<meta name="description" content="The people who built Bytescript — their GitHub profiles, achievements, followers and repositories — and how you can join them.">
 <link rel="icon" href="favicon.ico">
 <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css?v=3">
 </head>
 <body>
 <header class="site">
@@ -28,40 +28,241 @@
 
 <main class="wrap">
 <h1>Contributors</h1>
-<p>Bytescript is built by volunteers in the open. Thank you to everyone who has written code, docs or bug reports for it. <span id="contributors-note" class="muted">This list refreshes itself from GitHub when you're online.</span></p>
+<p>Bytescript is built by volunteers in the open. These are the people behind it — with their real GitHub profiles, achievement badges, followers and best repositories. <span id="contributors-note" class="muted">Profile snapshot from 27 Oct 2026 — when you're online, this page refreshes the numbers live from the GitHub API.</span></p>
 
-<div class="grid" id="contributors-live">
-  <!-- baked-in snapshot (replaced live by the GitHub API when available) -->
-  <div class="card person">
-    <img class="avatar" src="https://avatars.githubusercontent.com/u/146124313?v=4" alt="ayteam8" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="avatar-fallback">a</div>
-    <h3>ayteam8</h3>
-    <p class="muted">Creator &amp; lead developer · 138 contributions</p>
-    <p>Designed the language and wrote the compiler, the bytecode VM, the type resolver and most of the standard library.</p>
-    <p><a href="https://github.com/ayteam8">GitHub profile</a></p>
-  </div>
-  <div class="card person">
-    <img class="avatar" src="https://avatars.githubusercontent.com/u/104579306?v=4" alt="Guille-ux" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="avatar-fallback">G</div>
-    <h3>Guille-ux</h3>
-    <p class="muted">Contributor · 4 contributions</p>
-    <p>Contributions merged via pull request — the first external contributor to the project.</p>
-    <p><a href="https://github.com/Guille-ux">GitHub profile</a></p>
-  </div>
-  <div class="card person">
-    <img class="avatar" src="https://github.com/gefrus112.png" alt="gefrus112" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="avatar-fallback">g</div>
-    <h3>gefrus112</h3>
-    <p class="muted">Repository owner &amp; maintainer</p>
-    <p>Hosts and maintains the project on GitHub.</p>
-    <p><a href="https://github.com/gefrus112">GitHub profile</a></p>
-  </div>
+<table class="leaderboard" aria-label="Contributor leaderboard">
+  <thead><tr><th>#</th><th>Contributor</th><th>Role</th><th>Contributions</th><th>Share of this repo</th><th>GitHub achievements</th></tr></thead>
+  <tbody>
+    <tr><td>01</td><td><a href="https://github.com/ayteam8">@ayteam8</a></td><td>Creator &amp; lead developer</td><td><b data-contrib-for="ayteam8">138</b></td><td><span class="share-bar"><i style="width:96.5%" data-share-for="ayteam8"></i></span><span data-sharepct-for="ayteam8">96.5%</span></td><td class="muted">—</td></tr>
+    <tr><td>02</td><td><a href="https://github.com/Guille-ux">@Guille-ux</a></td><td>Contributor</td><td><b data-contrib-for="Guille-ux">4</b></td><td><span class="share-bar"><i style="width:2.8%" data-share-for="Guille-ux"></i></span><span data-sharepct-for="Guille-ux">2.8%</span></td><td>🦈 Pull Shark · 🤠 Quickdraw · 🚀 YOLO</td></tr>
+    <tr><td>03</td><td><a href="https://github.com/gefrus112">@gefrus112</a></td><td>Maintainer &amp; repo owner</td><td><b data-contrib-for="gefrus112">1</b></td><td><span class="share-bar"><i style="width:0.7%" data-share-for="gefrus112"></i></span><span data-sharepct-for="gefrus112">0.7%</span></td><td>👥 Pair Extraordinaire · 🦈 Pull Shark 🥉×2 · 🚀 YOLO</td></tr>
+  </tbody>
+</table>
+
+<div class="people" id="contributors-live">
+
+  <!-- ================= ayteam8 ================= -->
+  <article class="person-card" data-login="ayteam8">
+    <span class="rank">#1 · Top contributor</span>
+    <div class="person-head">
+      <img class="avatar xl" src="https://avatars.githubusercontent.com/u/146124313?v=4" alt="ayteam8 avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="avatar-fallback xl">a</div>
+      <div class="person-id">
+        <h3><a href="https://github.com/ayteam8" data-gh="name">ayteam</a></h3>
+        <p class="login">@ayteam8</p>
+        <span class="role-chip">Creator &amp; lead developer</span>
+      </div>
+      <div class="person-actions">
+        <a class="btn small primary" href="https://github.com/ayteam8">GitHub profile ↗</a>
+        <a class="btn small" href="https://github.com/ayteam8?tab=repositories">Repositories</a>
+      </div>
+    </div>
+    <p class="bio">Designed the Bytescript language and wrote its compiler, bytecode VM, type resolver and most of the standard library. This repository is a fork of his original <a href="https://github.com/ayteam8/Bytescript">ayteam8/Bytescript</a>.</p>
+    <ul class="person-meta">
+      <li>🗓️ Joined GitHub Sep 2023</li>
+      <li>💾 Writes in C</li>
+    </ul>
+    <div class="person-stats">
+      <div class="ps"><b data-gh="followers">2</b><span>Followers</span></div>
+      <div class="ps"><b data-gh="following">0</b><span>Following</span></div>
+      <div class="ps"><b data-gh="public_repos">1</b><span>Repos</span></div>
+      <div class="ps"><b data-gh="public_gists">0</b><span>Gists</span></div>
+      <div class="ps"><b data-gh="stars">6</b><span>Stars earned</span></div>
+    </div>
+    <div class="followers-row">
+      <span>Followed by</span>
+      <span class="stack" data-gh-followers>
+        <a href="https://github.com/Guille-ux" title="@Guille-ux"><img src="https://github.com/Guille-ux.png?size=56" alt="@Guille-ux"></a>
+        <a href="https://github.com/gefrus112" title="@gefrus112"><img src="https://github.com/gefrus112.png?size=56" alt="@gefrus112"></a>
+      </span>
+      <span>@Guille-ux &amp; @gefrus112 — his fellow Bytescript contributors!</span>
+    </div>
+    <div class="contrib-meter">
+      <div class="contrib-label"><span><b data-contrib-for="ayteam8">138</b> contributions to Bytescript</span><span data-sharepct-for="ayteam8">96.5%</span></div>
+      <div class="meter"><i style="width:96.5%" data-share-for="ayteam8"></i></div>
+    </div>
+    <div class="person-cols">
+      <div>
+        <h4>🏅 GitHub achievements</h4>
+        <p class="muted">No public achievement badges yet — the code speaks for itself.</p>
+        <h4>⭐ Highlights</h4>
+        <ul class="highlights">
+          <li>🏆 <b>Language creator</b> — designed Bytescript's syntax, type system &amp; semantics</li>
+          <li>🧠 Wrote the <b>compiler, register-based VM and type resolver</b> from scratch in C</li>
+          <li>📚 Authored most of the <b>C standard library</b> (Math, Json, OS, Time…)</li>
+          <li>⭐ His upstream repo <b>ayteam8/Bytescript</b> has earned 6 stars &amp; 2 forks</li>
+        </ul>
+      </div>
+      <div>
+        <h4>📦 Top repositories</h4>
+        <div class="repo-grid" data-gh-repos>
+          <a class="repo-card" href="https://github.com/ayteam8/Bytescript"><span class="r-name">Bytescript</span><span class="r-desc">Interpreted programming language — the original upstream of this project</span><span class="repo-meta"><span><span class="lang-dot" style="background:#555555"></span>C</span><span>★ 6</span><span>⑂ 2</span></span></a>
+          <a class="repo-card" href="https://github.com/ayteam8?tab=repositories"><span class="r-name">All repositories →</span><span class="r-desc">Everything ayteam8 has published on GitHub</span><span class="repo-meta"><span>github.com/ayteam8</span></span></a>
+        </div>
+        <h4>⌨️ Languages</h4>
+        <div class="lang-row" data-gh-langs><span class="lang-chip"><span class="lang-dot" style="background:#555555"></span>C ×1</span></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ================= Guille-ux ================= -->
+  <article class="person-card" data-login="Guille-ux">
+    <span class="rank alt">#2 · Contributor</span>
+    <div class="person-head">
+      <img class="avatar xl" src="https://avatars.githubusercontent.com/u/104579306?v=4" alt="Guille-ux avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="avatar-fallback xl">G</div>
+      <div class="person-id">
+        <h3><a href="https://github.com/Guille-ux" data-gh="name">Guillermo leira temes</a></h3>
+        <p class="login">@Guille-ux</p>
+        <span class="role-chip">Contributor — first external contributor</span>
+      </div>
+      <div class="person-actions">
+        <a class="btn small primary" href="https://github.com/Guille-ux">GitHub profile ↗</a>
+        <a class="btn small" href="https://github.com/Guille-ux?tab=repositories">Repositories</a>
+      </div>
+    </div>
+    <p class="bio">Systems programmer from Spain who builds operating systems, libraries and even his own programming languages in C and Python — and the first person outside the project to contribute to Bytescript.</p>
+    <ul class="person-meta">
+      <li>📍 Spain</li>
+      <li>🗓️ Joined GitHub Apr 2022</li>
+      <li>🗃️ <span data-gh="public_gists">8</span> public gists</li>
+    </ul>
+    <div class="person-stats">
+      <div class="ps"><b data-gh="followers">6</b><span>Followers</span></div>
+      <div class="ps"><b data-gh="following">11</b><span>Following</span></div>
+      <div class="ps"><b data-gh="public_repos">33</b><span>Repos</span></div>
+      <div class="ps"><b data-gh="public_gists">8</b><span>Gists</span></div>
+      <div class="ps"><b data-gh="stars">30</b><span>Stars earned</span></div>
+    </div>
+    <div class="followers-row">
+      <span>Followed by</span>
+      <span class="stack" data-gh-followers>
+        <a href="https://github.com/NunteGamer" title="@NunteGamer"><img src="https://github.com/NunteGamer.png?size=56" alt="@NunteGamer"></a>
+        <a href="https://github.com/manel-leira" title="@manel-leira"><img src="https://github.com/manel-leira.png?size=56" alt="@manel-leira"></a>
+        <a href="https://github.com/thomasnynas12" title="@thomasnynas12"><img src="https://github.com/thomasnynas12.png?size=56" alt="@thomasnynas12"></a>
+        <a href="https://github.com/Lxcardoza993" title="@Lxcardoza993"><img src="https://github.com/Lxcardoza993.png?size=56" alt="@Lxcardoza993"></a>
+        <a href="https://github.com/arvelquigley99" title="@arvelquigley99"><img src="https://github.com/arvelquigley99.png?size=56" alt="@arvelquigley99"></a>
+        <a href="https://github.com/gefrus112" title="@gefrus112"><img src="https://github.com/gefrus112.png?size=56" alt="@gefrus112"></a>
+      </span>
+      <span>6 followers incl. @gefrus112</span>
+    </div>
+    <div class="contrib-meter">
+      <div class="contrib-label"><span><b data-contrib-for="Guille-ux">4</b> contributions to Bytescript</span><span data-sharepct-for="Guille-ux">2.8%</span></div>
+      <div class="meter"><i style="width:2.8%" data-share-for="Guille-ux"></i></div>
+    </div>
+    <div class="person-cols">
+      <div>
+        <h4>🏅 GitHub achievements</h4>
+        <div class="ach-row">
+          <a class="ach" href="https://github.com/Guille-ux?achievement=pull-shark&amp;tab=achievements" title="Opened pull requests that were merged"><span class="a-ico">🦈</span><span class="a-txt"><b>Pull Shark</b><span>merged pull requests</span></span></a>
+          <a class="ach" href="https://github.com/Guille-ux?achievement=quickdraw&amp;tab=achievements" title="Closed an issue or pull request within 5 minutes of opening"><span class="a-ico">🤠</span><span class="a-txt"><b>Quickdraw</b><span>closed in &lt;5 minutes</span></span></a>
+          <a class="ach" href="https://github.com/Guille-ux?achievement=yolo&amp;tab=achievements" title="Merged a pull request without a review"><span class="a-ico">🚀</span><span class="a-txt"><b>YOLO</b><span>merged without review</span></span></a>
+        </div>
+        <h4>⭐ Highlights</h4>
+        <ul class="highlights">
+          <li>🥇 <b>First external contributor</b> in Bytescript history</li>
+          <li>🖥️ Building <b>Munix</b> — an entire operating system in C</li>
+          <li>🐍 Created <b>Plang</b>, his own programming language with a Python compiler</li>
+          <li>🌐 <b>33 public repositories</b> and 30 stars earned across C &amp; Python projects</li>
+        </ul>
+      </div>
+      <div>
+        <h4>📦 Top repositories</h4>
+        <div class="repo-grid" data-gh-repos>
+          <a class="repo-card" href="https://github.com/Guille-ux/Munix"><span class="r-name">Munix</span><span class="r-desc">An operating system</span><span class="repo-meta"><span><span class="lang-dot" style="background:#555555"></span>C</span><span>★ 2</span></span></a>
+          <a class="repo-card" href="https://github.com/Guille-ux/libmorse"><span class="r-name">libmorse</span><span class="r-desc">A library to translate between morse and characters</span><span class="repo-meta"><span><span class="lang-dot" style="background:#555555"></span>C</span><span>★ 2</span></span></a>
+          <a class="repo-card" href="https://github.com/Guille-ux/THE-RED-LINE"><span class="r-name">THE-RED-LINE</span><span class="r-desc">A strategy game for PC</span><span class="repo-meta"><span><span class="lang-dot" style="background:#3572A5"></span>Python</span><span>★ 2</span></span></a>
+        </div>
+        <h4>⌨️ Languages</h4>
+        <div class="lang-row" data-gh-langs>
+          <span class="lang-chip"><span class="lang-dot" style="background:#555555"></span>C ×18</span>
+          <span class="lang-chip"><span class="lang-dot" style="background:#3572A5"></span>Python ×12</span>
+          <span class="lang-chip"><span class="lang-dot" style="background:#f1e05a"></span>JavaScript ×1</span>
+          <span class="lang-chip"><span class="lang-dot" style="background:#e34c26"></span>HTML ×1</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ================= gefrus112 ================= -->
+  <article class="person-card" data-login="gefrus112">
+    <span class="rank alt">Maintainer</span>
+    <div class="person-head">
+      <img class="avatar xl" src="https://github.com/gefrus112.png?size=160" alt="gefrus112 avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="avatar-fallback xl">g</div>
+      <div class="person-id">
+        <h3><a href="https://github.com/gefrus112" data-gh="name">highenough</a></h3>
+        <p class="login">@gefrus112</p>
+        <span class="role-chip">Maintainer &amp; repository owner</span>
+      </div>
+      <div class="person-actions">
+        <a class="btn small primary" href="https://github.com/gefrus112">GitHub profile ↗</a>
+        <a class="btn small" href="https://github.com/gefrus112?tab=repositories">Repositories</a>
+      </div>
+    </div>
+    <p class="bio">“<span data-gh="bio">welcome to my github am the creator of API board</span>” — hosts this repository and website, reviews and merges pull requests (including the big v1.1 cross-platform release), and builds web tools and games.</p>
+    <ul class="person-meta">
+      <li>📍 USA</li>
+      <li>🗓️ Joined GitHub Sep 2026</li>
+      <li>🔗 <a href="https://followgut.wasmer.app/">followgut.wasmer.app</a></li>
+      <li>▶️ <a href="https://www.youtube.com/@CubeCometYT">YouTube @CubeCometYT</a></li>
+    </ul>
+    <div class="person-stats">
+      <div class="ps"><b data-gh="followers">0</b><span>Followers</span></div>
+      <div class="ps"><b data-gh="following">10</b><span>Following</span></div>
+      <div class="ps"><b data-gh="public_repos">13</b><span>Repos</span></div>
+      <div class="ps"><b data-gh="public_gists">0</b><span>Gists</span></div>
+      <div class="ps"><b data-gh="stars">10</b><span>Stars earned</span></div>
+    </div>
+    <div class="followers-row">
+      <span data-gh-followers-empty>No followers yet — <a href="https://github.com/gefrus112">be the first to follow @gefrus112 →</a></span>
+      <span class="stack" data-gh-followers></span>
+    </div>
+    <div class="contrib-meter">
+      <div class="contrib-label"><span><b data-contrib-for="gefrus112">1</b> contribution counted here* </span><span data-sharepct-for="gefrus112">0.7%</span></div>
+      <div class="meter"><i style="width:0.7%" data-share-for="gefrus112"></i></div>
+      <p class="muted" style="font-size:.78rem;margin:6px 0 0">*As maintainer he mostly reviews, merges &amp; hosts — GitHub only counts his direct commits in this number.</p>
+    </div>
+    <div class="person-cols">
+      <div>
+        <h4>🏅 GitHub achievements</h4>
+        <div class="ach-row">
+          <a class="ach" href="https://github.com/gefrus112?achievement=pair-extraordinaire&amp;tab=achievements" title="Co-authored commits in a merged pull request"><span class="a-ico">👥</span><span class="a-txt"><b>Pair Extraordinaire</b><span>co-authored a merged PR</span></span></a>
+          <a class="ach" href="https://github.com/gefrus112?achievement=pull-shark&amp;tab=achievements" title="Opened 16+ pull requests that were merged (bronze tier, level 2)"><span class="a-ico">🦈</span><span class="a-txt"><b>Pull Shark</b><span class="tier">🥉 Bronze ×2 · 16+ merged PRs</span></span></a>
+          <a class="ach" href="https://github.com/gefrus112?achievement=yolo&amp;tab=achievements" title="Merged a pull request without a review"><span class="a-ico">🚀</span><span class="a-txt"><b>YOLO</b><span>merged without review</span></span></a>
+        </div>
+        <h4>⭐ Highlights</h4>
+        <ul class="highlights">
+          <li>🚀 Shipped <b>Bytescript 1.1</b> — merged the Linux/macOS port, test suite &amp; this website</li>
+          <li>🛠️ Creator of <b>API Board</b>, a hub of useful API keys &amp; tools for projects</li>
+          <li>🎮 Building <b>votyer</b>, a WebGL game builder in the browser</li>
+          <li>🌐 <b>13 public repositories</b> — dashboards, templates, games &amp; this language</li>
+        </ul>
+      </div>
+      <div>
+        <h4>📦 Top repositories</h4>
+        <div class="repo-grid" data-gh-repos>
+          <a class="repo-card" href="https://github.com/gefrus112/API-board"><span class="r-name">API-board</span><span class="r-desc">Gives you useful API keys for weather API projects, sheets and more</span><span class="repo-meta"><span><span class="lang-dot" style="background:#3178c6"></span>TypeScript</span><span>★ 1</span></span></a>
+          <a class="repo-card" href="https://github.com/gefrus112/votyer"><span class="r-name">votyer</span><span class="r-desc">Welcome to my own WebGL game builder</span><span class="repo-meta"><span><span class="lang-dot" style="background:#f1e05a"></span>JavaScript</span><span>★ 1</span></span></a>
+          <a class="repo-card" href="https://github.com/gefrus112/github-proflie-viewer"><span class="r-name">github-proflie-viewer</span><span class="r-desc">GitHub profile viewer and code</span><span class="repo-meta"><span><span class="lang-dot" style="background:#e34c26"></span>HTML</span><span>★ 1</span></span></a>
+        </div>
+        <h4>⌨️ Languages</h4>
+        <div class="lang-row" data-gh-langs>
+          <span class="lang-chip"><span class="lang-dot" style="background:#f1e05a"></span>JavaScript ×4</span>
+          <span class="lang-chip"><span class="lang-dot" style="background:#e34c26"></span>HTML ×3</span>
+          <span class="lang-chip"><span class="lang-dot" style="background:#3178c6"></span>TypeScript ×1</span>
+          <span class="lang-chip"><span class="lang-dot" style="background:#3572A5"></span>Python ×1</span>
+          <span class="lang-chip"><span class="lang-dot" style="background:#555555"></span>C ×1</span>
+        </div>
+      </div>
+    </div>
+  </article>
 </div>
 
 <div class="card" style="text-align:center">
   <div style="font-size:2rem">🙋</div>
   <h3>Your name here?</h3>
-  <p>Bytescript grows one pull request at a time. Fixes, features, docs and exemples are all welcome — the next card on this page could be yours.</p>
+  <p>Bytescript grows one pull request at a time. Fixes, features, docs and exemples are all welcome — the next profile on this page could be yours, achievements and all.</p>
   <p><a class="btn primary small" href="#how-to-contribute">How to contribute</a> <a class="btn small" href="https://github.com/gefrus112/Bytescript">Open the repository</a></p>
 </div>
 
@@ -123,6 +324,6 @@ git checkout -b my-change</code></pre></div>
     </ul></div>
   </div>
 </footer>
-<script src="assets/js/main.js"></script>
+<script src="assets/js/main.js?v=3"></script>
 </body>
 </html>

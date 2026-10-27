@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bytescript</title>
+<!--
+  GitHub Pages fallback entry point.
+
+  If Pages is configured as "Deploy from a branch" (main / root), GitHub
+  serves THIS file at https://gefrus112.github.io/Bytescript/ and it forwards
+  visitors to the real site in website/. If Pages is configured as
+  "GitHub Actions", only website/ is deployed and this file is unused.
+  Either way the site loads instead of a 404 / the README.
+-->
+<meta http-equiv="refresh" content="0; url=website/">
+<link rel="canonical" href="website/">
+<script>window.location.replace("website/" + window.location.hash);</script>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;
+    font-family:ui-monospace,Consolas,Menlo,monospace;color:#f2f2ea;background:#050505}
+  .card{padding:42px}.spin{width:54px;height:54px;margin:0 auto 18px;
+    border:3px solid #3f3f38;border-top-color:#ffdd00;animation:sp .8s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}a{color:#ffdd00;font-weight:700}
+  h1{text-transform:uppercase;letter-spacing:.02em;font-size:1.4rem}
+  @media (prefers-reduced-motion:reduce){.spin{animation:none}}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="spin" aria-hidden="true"></div>
+    <h1>Loading Bytescript…</h1>
+    <p>Taking you to the website. If nothing happens, <a href="website/">open it here</a>.</p>
+  </div>
+</body>
+</html>

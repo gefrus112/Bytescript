@@ -1,9 +1,18 @@
 name: Deploy website to GitHub Pages
 
+# IMPORTANT: this workflow only publishes when the repository's Pages
+# source is set to "GitHub Actions":
+#   Settings -> Pages -> Build and deployment -> Source: GitHub Actions
+#
+# If the source is left as "Deploy from a branch" (main / root), GitHub
+# serves the repository root instead; the /index.html at the repo root is
+# a fallback that redirects visitors into /website/, so the site still
+# loads either way.
+
 on:
   push:
     branches: [main]
-    paths: ['website/**', '.github/workflows/pages.yml']
+    paths: ['website/**', 'index.html', '.nojekyll', '.github/workflows/pages.yml']
   workflow_dispatch:
 
 permissions:
@@ -23,8 +32,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Verify the site is complete
+        run: |
+          test -f website/index.html
+          test -f website/docs.html
+          test -f website/assets/css/style.css
+          test -f website/assets/js/main.js
+          find website -type f | sort
+
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: website
       - id: deployment
