@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Download Bytescript</title>
+<meta name="description" content="Download the Bytescript programming language for Windows, Linux and macOS, or get the source code.">
+<link rel="icon" href="favicon.ico">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="site">
+  <div class="nav">
+    <a class="brand" href="index.html"><img src="assets/logo.svg" alt="Bytescript logo">Bytescript <span class="ver">v1.1.0</span></a>
+    <button class="icon-btn nav-toggle" type="button" aria-label="Menu">☰</button>
+    <nav class="main">
+      <a href="index.html">Home</a>
+      <a href="docs.html">Docs</a>
+      <a href="install.html">Install</a>
+      <a href="download.html">Download</a>
+      <a href="contributors.html">Contributors</a>
+      <a href="https://github.com/gefrus112/Bytescript">GitHub ↗</a>
+    </nav>
+    <button class="icon-btn theme-toggle" type="button" title="Toggle light/dark theme">🌗</button>
+  </div>
+</header>
+
+<main class="wrap">
+<h1>Download Bytescript</h1>
+<p>Current version: <strong>1.1.0</strong> — first cross-platform release (Windows, Linux, macOS), new CLI with REPL, and a pile of crash fixes. <a href="https://github.com/gefrus112/Bytescript/blob/main/CHANGELOG.md">Release notes →</a></p>
+
+<div class="card">
+  <h3 style="margin-top:0">📦 Latest release from GitHub</h3>
+  <div id="latest-release">
+    <p>Prebuilt packages are published on the GitHub releases page:</p>
+    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/latest">⬇&nbsp; Latest release on GitHub</a>
+       <a class="btn small" href="https://github.com/gefrus112/Bytescript/releases">All releases</a></p>
+    <p class="muted">No release for your platform yet? Every push also produces ready-to-use builds under <a href="https://github.com/gefrus112/Bytescript/actions">Actions → Build &amp; test → Artifacts</a> (<code>bytescript-windows-latest</code>, <code>bytescript-ubuntu-latest</code>, <code>bytescript-macos-latest</code>) — or build from source below, it takes two minutes.</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card dl-card"><div class="os">🪟</div><h3>Windows</h3>
+    <p><code>bytescript.exe</code> + <code>bytescript.dll</code> + stdlib</p>
+    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/latest">Download build</a></p>
+    <p><a href="install.html">Windows install steps →</a></p></div>
+
+  <div class="card dl-card"><div class="os">🐧</div><h3>Linux</h3>
+    <p><code>bytescript</code> + <code>libbytescript.so</code> + stdlib</p>
+    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/latest">Download build</a></p>
+    <p><a href="install.html">Linux install steps →</a></p></div>
+
+  <div class="card dl-card"><div class="os">🍎</div><h3>macOS</h3>
+    <p><code>bytescript</code> + <code>libbytescript.dylib</code> + stdlib</p>
+    <p><a class="btn primary small" href="https://github.com/gefrus112/Bytescript/releases/latest">Download build</a></p>
+    <p><a href="install.html">macOS install steps →</a></p></div>
+
+  <div class="card dl-card"><div class="os">💾</div><h3>Source code</h3>
+    <p>Build it yourself — GCC + <code>make</code>, nothing else needed.</p>
+    <p><a class="btn primary small" href="https://codeload.github.com/gefrus112/Bytescript/zip/refs/heads/main">.zip</a>
+       <a class="btn small" href="https://codeload.github.com/gefrus112/Bytescript/tar.gz/refs/heads/main">.tar.gz</a></p>
+    <p class="muted">…or clone it:</p>
+<pre><code>git clone https://github.com/gefrus112/Bytescript.git</code></pre></div>
+</div>
+
+<h2>Build from source</h2>
+<pre><code>git clone https://github.com/gefrus112/Bytescript.git
+cd Bytescript
+make          # or: mingw32-make   (Windows/MSYS2)
+make test     # 24 checks, all should pass
+./dist/bytescript --version</code></pre>
+<p>Then follow your OS tab in the <a href="install.html">install guide</a> to put <code>dist/</code> on your PATH. Build flavours: <code>make</code> (optimised, <code>-march=native</code>), <code>make release</code> (optimised, portable), <code>make debug</code> (symbols), <code>make clean</code>.</p>
+
+<h2>What you get</h2>
+<table>
+<tr><th>Contents</th><th>What it is</th></tr>
+<tr><td><code>bytescript(.exe)</code></td><td>The interpreter / REPL.</td></tr>
+<tr><td><code>bytescript.dll</code> + <code>.lib</code> / <code>libbytescript.so</code> / <code>.dylib</code></td><td>The language as a library, for embedding in C programs.</td></tr>
+<tr><td><code>bytescript.h</code>, <code>bytev.h</code>, <code>platform.h</code></td><td>Public C API headers.</td></tr>
+<tr><td><code>stdlib/</code></td><td>Standard library: Math, OS, Time, Random, Json, Base64, Debug + built-in module maps. <strong>Must stay next to the executable.</strong></td></tr>
+<tr><td>Source only: <code>exemples/</code>, <code>tests/</code>, <code>docs/</code>, <code>website/</code>, <code>editors/</code></td><td>Example programs, the test suite, documentation sources, this website, VS Code extension.</td></tr>
+</table>
+
+<h2>System requirements</h2>
+<table>
+<tr><th></th><th>Requirement</th></tr>
+<tr><td>OS</td><td>Windows 10+ (64-bit), any modern Linux (glibc, x86-64 — ARM builds from source), macOS 11+</td></tr>
+<tr><td>To run</td><td>Nothing extra — the interpreter is self-contained.</td></tr>
+<tr><td>To build</td><td>GCC (MinGW/MSYS2 on Windows) + GNU make. No other dependencies.</td></tr>
+<tr><td>Size</td><td>A few hundred KB for the binaries.</td></tr>
+</table>
+
+<p class="muted">Licence: MIT (see <code>LICENSE</code> in the repository). Found a broken download or a missing platform? <a href="https://github.com/gefrus112/Bytescript/issues">Tell us on GitHub</a>.</p>
+</main>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div><h4>Bytescript</h4><p>A small object-oriented language in C.<br>Free and open source (MIT).</p></div>
+    <div><h4>Project</h4><ul>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="install.html">Install guide</a></li>
+      <li><a href="download.html">Download</a></li>
+      <li><a href="contributors.html">Contributors</a></li>
+    </ul></div>
+    <div><h4>GitHub</h4><ul>
+      <li><a href="https://github.com/gefrus112/Bytescript">Repository</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/releases">Releases</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/issues">Issues</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/CHANGELOG.md">Changelog</a></li>
+    </ul></div>
+    <div><h4>Deep docs</h4><ul>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/syntax.md">Syntax (Markdown)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/stdlib.md">Standard library (Markdown)</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/embedding.md">Embedding in C</a></li>
+      <li><a href="https://github.com/gefrus112/Bytescript/blob/main/docs/bvm.md">The BVM</a></li>
+    </ul></div>
+  </div>
+</footer>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+Table t = { 10, 20, 30 }
+print(t:len())
+print(t[0] + t[1] + t[2])
+Number total = 0
+for i, v in t repeat
+    total = total + v
+end
+print(total)
+t:insert(40)
+print(t:len())
+print(t[3])

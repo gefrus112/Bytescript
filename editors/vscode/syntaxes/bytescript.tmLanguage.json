@@ -1,0 +1,51 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Bytescript",
+  "scopeName": "source.bytescript",
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#string" },
+    { "include": "#number" },
+    { "include": "#keyword" },
+    { "include": "#type" },
+    { "include": "#builtin" },
+    { "include": "#function-call" },
+    { "include": "#operator" }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.line.double-dash.bytescript",
+      "match": "--.*$"
+    },
+    "string": {
+      "name": "string.quoted.double.bytescript",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [{ "name": "constant.character.escape.bytescript", "match": "\\\\." }]
+    },
+    "number": {
+      "name": "constant.numeric.bytescript",
+      "match": "\\b\\d+(\\.\\d+)?\\b"
+    },
+    "keyword": {
+      "name": "keyword.control.bytescript",
+      "match": "\\b(if|then|elseif|else|for|while|repeat|in|break|continue|return|end|func|class|static|import|from|require|as|alloc|and|or|not|var)\\b"
+    },
+    "type": {
+      "name": "storage.type.bytescript",
+      "match": "\\b(Number|num|String|str|Table|table|Function|CData|File)\\b"
+    },
+    "builtin": {
+      "name": "support.function.bytescript",
+      "match": "\\b(print|input|free|exec|disassemble|self|NIL|true|false)\\b"
+    },
+    "function-call": {
+      "name": "entity.name.function.bytescript",
+      "match": "\\b[A-Za-z_]\\w*(?=\\s*\\()"
+    },
+    "operator": {
+      "name": "keyword.operator.bytescript",
+      "match": "\\.\\.|==|!=|<=|>=|//|\\*\\*|&&|\\|\\||->|[+\\-*/%^&|<>=!.:]"
+    }
+  }
+}

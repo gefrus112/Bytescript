@@ -1,9 +1,10 @@
 #include <sys/time.h>
 
+#include "platform.h"
 #include "Random/Random.h"
 
-__declspec(dllexport) char* bytescript_module_map = "Random_map.bs";
-__declspec(dllexport) TValue bytescript_module_loader(TValue* argv, size_t argc) {
+BS_EXPORT char* bytescript_module_map = "Random_map.bs";
+BS_EXPORT TValue bytescript_module_loader(TValue* argv, size_t argc) {
     TValue fields[] = {
         new_cfunc(seed_random),
         new_cfunc(random_random),

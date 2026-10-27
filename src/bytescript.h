@@ -1,7 +1,14 @@
 #ifndef BYTESCRIPT_API
 #define BYTESCRIPT_API
 
+#include <setjmp.h>
+
 #include "bytev.h"
+
+#define BYTESCRIPT_VERSION_MAJOR 1
+#define BYTESCRIPT_VERSION_MINOR 1
+#define BYTESCRIPT_VERSION_PATCH 0
+#define BYTESCRIPT_VERSION "1.1.0"
 
 #define MIN_ARGC(n)                     { if (argc < n) return NIL; }
 #define STRICT_MIN_ARGC(n, fname)       { if (argc < n) call_error(new_invalid_args_error, "function <" fname "> take " #n " arguments"); }
@@ -75,6 +82,10 @@ TValue new_invalid_identifier_error(TValue* argv, size_t argc);
 TValue new_unknown_identifier_error(TValue* argv, size_t argc);
 TValue new_unidentified_character_error(TValue* argv, size_t argc);
 void call_error(CFunc err_func, char details[]);
+
+/* Install a jump buffer that errors longjmp() to instead of exiting the
+ * process (see Globals/error.h). */
+void bs_set_error_jmp(jmp_buf* buf);
 
 extern TValue IO_stdout;
 TValue open_IO(TValue* argv, size_t argc);

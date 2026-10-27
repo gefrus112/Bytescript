@@ -2,7 +2,7 @@
 #define NODES_H
 
 #include <stdbool.h>
-#include <windows.h>
+#include "platform.h"
 #include "Values/helper_structs.h"
 #include "Lexer/lexer.h"
 
@@ -74,7 +74,7 @@ typedef struct BNode {
         struct { Node* condition; Node* statements; } whileNode;
         struct { Node* condition; Node* statements; } repeatNode;
         struct { TValue module; TValue type_specifier; TValue identifier; Node* ast; } importNode;
-        struct { TValue module; TValue type_specifier; TValue identifier; Node* ast; HMODULE dll; } cimportNode;
+        struct { TValue module; TValue type_specifier; TValue identifier; Node* ast; BSModule dll; } cimportNode;
         struct { Node* import_node; struct TValueLinkedList elements; struct TValueLinkedList elem_types; struct TValueLinkedList nicknames; } fromImportNode;
         struct { TValue name; TValue type_specifier; TValue modifiers; struct TValueLinkedList args; struct TValueLinkedList arg_types; Node* statements; } funcDefNode;
         struct { TValue name; TValue type_specifier; TValue modifiers; struct TValueLinkedList args; struct TValueLinkedList arg_types; Node* statements; TValue class; } methodDefNode;

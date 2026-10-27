@@ -1,6 +1,7 @@
 _grammar.txt
 bytescript.exe
-build
-dist
-tests
 bytescript.zip
+build/
+dist/
+*.o
+*.d

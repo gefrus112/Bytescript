@@ -1,0 +1,54 @@
+-- demo.bs - a tour of Bytescript in one runnable file:
+-- functions, tables, loops, classes and the standard library.
+-- Run it with:  bytescript exemples/demo.bs
+
+func Number fib(Number n)
+    if n <= 1 then return n end
+
+    Number a = 0
+    Number b = 1
+
+    for i = 1, n repeat
+        Number tmp = a + b
+        a = b
+        b = tmp
+    end
+
+    return b
+end
+
+print("fib(10) is:")
+print(fib(10))
+
+Table numbers = { 5, 2, 9, 1, 7 }
+Number total = 0
+
+for i, v in numbers repeat
+    total = total + v
+end
+
+print("sum of the table is:")
+print(total)
+
+class Counter
+    func static Counter __new()
+        Number self.value = 0
+        return self
+    end
+
+    func increment()
+        self.value = self.value + 1
+    end
+
+    func Number get()
+        return self.value
+    end
+end
+
+Counter clicks = Counter:new()
+clicks:increment()
+clicks:increment()
+clicks:increment()
+
+print("counter after 3 increments:")
+print(clicks:get())

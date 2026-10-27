@@ -1,7 +1,8 @@
+#include "platform.h"
 #include "Debug/Debug.h"
 
-__declspec(dllexport) char* bytescript_module_map = "Debug_map.bs";
-__declspec(dllexport) TValue bytescript_module_loader(TValue* argv, size_t argc) {
+BS_EXPORT char* bytescript_module_map = "Debug_map.bs";
+BS_EXPORT TValue bytescript_module_loader(TValue* argv, size_t argc) {
     TValue fields[] = {
         new_cfunc(assert_debug),
     };

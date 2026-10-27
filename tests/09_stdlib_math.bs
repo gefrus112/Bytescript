@@ -1,0 +1,6 @@
+import "math.dll" as Math end
+print(Math:sqrt(16))
+print(Math:floor(17 / 10))
+print(Math:abs(0 - 3))
+print(Math:max(4, 9))
+print(Math:min(4, 9))

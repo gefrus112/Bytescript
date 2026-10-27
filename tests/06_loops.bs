@@ -1,0 +1,13 @@
+for i = 0, 3 repeat print(i) end
+Number n = 0
+while n < 3 repeat
+    print(n)
+    n = n + 1
+end
+Number m = 0
+repeat
+    m = m + 1
+    if m == 2 then continue end
+    if m == 4 then break end
+    print(m)
+while m < 10 end

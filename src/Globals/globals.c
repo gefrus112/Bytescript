@@ -97,8 +97,10 @@ TValue print(TValue* argv, size_t argc) {
             }
 
             default : {
+                /* %.15g like String:toString(): 6 prints as "6", not
+                 * "6.000000" (docs promise 15 digits of precision). */
                 double num = AS_NUM(v);
-                printf("%f", num);
+                printf("%.15g", num);
                 break;
             }
         }

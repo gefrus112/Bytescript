@@ -1,0 +1,16 @@
+-- Regression tests: `!=` used to emit no opcode (crash) and
+-- `a < b` between variables used to compute `a > b`.
+Number a = 1
+Number b = 2
+print(a < b)
+print(a > b)
+print(a <= b)
+print(a >= b)
+print(a == b)
+print(a != b)
+print(b < a)
+print(b > a)
+print(a == 1)
+print(a != 1)
+if a != b then print("different") end
+if a < b then print("a is smaller") end
